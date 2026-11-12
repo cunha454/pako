@@ -6,10 +6,11 @@
 2. [Problema e justificativa](#2-problema-e-justificativa)
 3. [Objetivos e público-alvo](#3-objetivos-e-público-alvo)
 4. [Funcionamento da plataforma](#4-funcionamento-da-plataforma)
-5. [Escopo do MVP](#5-escopo-do-mvp)
-6. [Requisitos e regras de negócio](#6-requisitos-e-regras-de-negócio)
-7. [Tecnologias e arquitetura](#7-tecnologias-e-arquitetura)
-8. [Funcionalidades futuras e riscos](#8-funcionalidades-futuras-e-riscos)
+5. [Fluxo individual](#5-fluxo-individual)
+6. [Escopo do MVP](#6-escopo-do-mvp)
+7. [Requisitos e regras de negócio](#7-requisitos-e-regras-de-negócio)
+8. [Tecnologias e arquitetura](#8-tecnologias-e-arquitetura)
+9. [Funcionalidades futuras e riscos](#9-funcionalidades-futuras-e-riscos)
 
 ---
 
@@ -37,7 +38,28 @@ O vendedor cadastra a encomenda e suas características. A plataforma estima o f
 
 Após a confirmação, a entrega fica disponível para entregadores compatíveis. O profissional que aceitar recebe os dados necessários para realizar o serviço e atualiza o andamento da entrega. O cliente recebe notificações pelo Telegram, enquanto avaliações e indicadores de desempenho contribuem para a reputação dos entregadores.
 
-## 5. Escopo do MVP
+    ## 5. Fluxo individual
+
+### Cliente
+- Cadastro de endereço e horário
+- Confirmação de encomenda
+- Confirmação de entrega e avaliação do entregador
+- Editar preferências
+### Entregador 
+- Cadastro/login
+- Entregas disponíveis
+- Entrega escolhida (rota)
+- Confirmação de entrega (verificação)
+- Pagamento pela entrega
+- Perfil para editar/adicionar dados
+### Vendedor
+- Cadastro/login
+- Simulação de frete
+- Cadastro da encomenda (cliente entra após a finalizar esse processo)
+- Pagamento da   entrega
+- Confirmação de entrega e avalição do entregador
+
+## 6. Escopo do MVP
 
 A primeira versão do Pako contemplará:
 
@@ -49,7 +71,7 @@ A primeira versão do Pako contemplará:
 - Pagamento da entrega pela plataforma.
 - Avaliações e sistema básico de reputação.
 
-## 6. Requisitos e regras de negócio
+## 7. Requisitos e regras de negócio
 
 O sistema deverá validar os dados das encomendas, considerar peso, dimensões e distância na estimativa de frete e disponibilizar cada serviço somente a entregadores com veículos compatíveis.
 
@@ -57,7 +79,7 @@ A reputação poderá considerar pontualidade, entregas concluídas, cancelament
 
 Os requisitos funcionais, não funcionais e as regras detalhadas serão definidos conforme o desenvolvimento do projeto.
 
-## 7. Tecnologias e arquitetura
+## 8. Tecnologias e arquitetura
 
 A arquitetura inicial prevê:
 
@@ -69,7 +91,7 @@ A arquitetura inicial prevê:
 
 A solução será organizada em módulos para facilitar a manutenção e permitir futuras integrações.
 
-## 8. Funcionalidades futuras e riscos
+## 9. Funcionalidades futuras e riscos
 
 Entre as possíveis evoluções estão a integração com lojas virtuais, a ampliação das regiões atendidas e o aprimoramento dos cálculos de frete e da reputação.
 
