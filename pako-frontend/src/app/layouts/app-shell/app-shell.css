@@ -1,0 +1,40 @@
+aside{
+    background-color: #174B35;
+    color: #fff;
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}   
+
+main{
+    flex: 1;
+}
+
+.active{
+    background-color: #356B52;
+}
+
+nav a{
+    color: #fff;
+    text-decoration: none;
+    padding: 16px;
+    border-radius: 6px;
+}
+
+nav{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.app-layout{
+    display: flex;
+    min-height: 100vh;
+}
+
+h1{
+    margin-bottom: 24px;
+    margin-left: 20px;
+}
+
