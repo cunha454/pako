@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
@@ -7,4 +7,15 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
   templateUrl: './app-shell.html',
   styleUrl: './app-shell.css',
 })
-export class AppShell {}
+export class AppShell {
+
+menuAberto = signal(false);
+
+alternarMenu(){
+    this.menuAberto.set(!this.menuAberto());
+}
+
+fecharMenu(){
+  this.menuAberto.set(false)
+}
+}

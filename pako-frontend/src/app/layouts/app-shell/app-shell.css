@@ -38,3 +38,37 @@ h1{
     margin-left: 20px;
 }
 
+.botao-menu{
+    display: none;
+}
+
+.backdrop {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    aside{
+        display: none;
+    }
+
+    .menu-aberto{
+        display: flex;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        z-index: 20;
+    }
+
+    .botao-menu{
+        display: block;
+    }
+
+    .backdrop{
+        display: flex;
+        position: fixed;
+        inset: 0;
+        z-index: 10;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+}

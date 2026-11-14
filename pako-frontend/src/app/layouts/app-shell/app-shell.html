@@ -1,13 +1,18 @@
 <div class="app-layout">
-    <aside>
+    @if (menuAberto()){
+    <button type="button" aria-label="Fechar menu" class="backdrop" (click)="alternarMenu()"></button>
+    }
+    <aside [class.menu-aberto]="menuAberto()">
         <h1>Pako</h1>
+        <button type="button" class="botao-menu" (click)="alternarMenu()">Fechar menu</button>
         <nav aria-label="Menu principal">
-            <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-            <a routerLink="/nova-encomenda" routerLinkActive="active">Nova encomenda</a>
-            <a routerLink="/simular-frete" routerLinkActive="active">Simular frete</a>
+            <a (click)="fecharMenu()" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+            <a (click)="fecharMenu()" routerLink="/nova-encomenda" routerLinkActive="active">Nova encomenda</a>
+            <a (click)="fecharMenu()" routerLink="/simular-frete" routerLinkActive="active">Simular frete</a>
         </nav>
     </aside>
     <main>
+        <button type="button" class="botao-menu" (click)="alternarMenu()">Abrir menu</button>
         <router-outlet />
     </main>
 </div>
