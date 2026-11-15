@@ -3,6 +3,11 @@ import { Dashboard } from './pages/dashboard/dashboard';
 import { NovaEncomenda } from './pages/nova-encomenda/nova-encomenda';
 import { SimularFrete } from './pages/simular-frete/simular-frete';
 import { AppShell } from './layouts/app-shell/app-shell';
+import { Perfil } from './pages/perfil/perfil';
+import { EntregasAgendadas } from './pages/entregas-agendadas/entregas-agendadas';
+import { EntregasConcluidas } from './pages/entregas-concluidas/entregas-concluidas';
+import { Login } from './pages/login/login';
+import { Cadastro } from './pages/cadastro/cadastro';
 
 
 export const routes: Routes = [
@@ -27,7 +32,27 @@ export const routes: Routes = [
                 path: 'simular-frete',
                 component: SimularFrete
             },
+            {
+                path: 'perfil',
+                component: Perfil
+            },
+            {
+                path: 'entregas-agendadas',
+                component: EntregasAgendadas
+            },
+            {
+                path: 'entregas-concluidas',
+                component: EntregasConcluidas
+            }
         ]
+    },
+    {
+        path: 'login',
+        component: Login
+    },
+    {
+        path: 'cadastro',
+        component: Cadastro
     },
     {
         path: '**',

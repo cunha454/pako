@@ -9,13 +9,19 @@ import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 })
 export class AppShell {
 
-menuAberto = signal(false);
+  menuAberto = signal(false);
 
-alternarMenu(){
-    this.menuAberto.set(!this.menuAberto());
-}
+  alternarMenu(){
+      this.menuAberto.set(!this.menuAberto());
+  }
 
-fecharMenu(){
-  this.menuAberto.set(false)
-}
+  fecharMenu(){
+    this.menuAberto.set(false)
+  }
+
+  menuRecolhido = signal(false);
+
+  alternarRecolhimento(){
+    this.menuRecolhido.set(!this.menuRecolhido())
+  }
 }

@@ -1,18 +1,51 @@
 <div class="app-layout">
     @if (menuAberto()){
-    <button type="button" aria-label="Fechar menu" class="backdrop" (click)="alternarMenu()"></button>
+        <button type="button" aria-label="Fechar menu" class="backdrop" (click)="alternarMenu()"></button>
     }
-    <aside [class.menu-aberto]="menuAberto()">
-        <h1>Pako</h1>
-        <button type="button" class="botao-menu" (click)="alternarMenu()">Fechar menu</button>
+    <aside [class.menu-aberto]="menuAberto()" [class.menu-recolhido]="menuRecolhido()">
+        <div class="cabecalho-sidebar">
+            <h1>Pako</h1>
+            <button type="button"
+            class="botao-recolher"
+            (click)="alternarRecolhimento()"
+            [attr.aria-label]="menuRecolhido() ? 'Expandir menu' : 'Recolher menu'">
+                {{ menuRecolhido() ? '→ ' : '←' }}
+            </button>
+            <button type="button" class="botao-menu" aria-label="Fechar menu" (click)="alternarMenu()">
+                ✕
+            </button>
+        </div>
         <nav aria-label="Menu principal">
-            <a (click)="fecharMenu()" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-            <a (click)="fecharMenu()" routerLink="/nova-encomenda" routerLinkActive="active">Nova encomenda</a>
-            <a (click)="fecharMenu()" routerLink="/simular-frete" routerLinkActive="active">Simular frete</a>
+            <a (click)="fecharMenu()" routerLink="/dashboard" routerLinkActive="active">
+                <span class="icone">▦</span>
+                <span class="texto-link">Dashboard</span>
+            </a>
+            <a (click)="fecharMenu()" routerLink="/nova-encomenda" routerLinkActive="active">
+                <span class="icone">▦</span>
+                <span class="texto-link">Nova encomenda</span>
+            </a>
+            <a (click)="fecharMenu()" routerLink="/simular-frete" routerLinkActive="active">
+                <span class="icone">▦</span>
+                <span class="texto-link">Simular frete</span>
+            </a>
+            <a (click)="fecharMenu()" routerLink="/entregas-agendadas" routerLinkActive="active">
+                <span class="icone">▦</span>
+                <span class="texto-link">Entregas Agendadas</span>
+            </a>
+            <a (click)="fecharMenu()" routerLink="/entregas-concluidas" routerLinkActive="active">
+                <span class="icone">▦</span>
+                <span class="texto-link">Entregas concluídas</span>
+            </a>   
+            <a (click)="fecharMenu()" routerLink="/perfil" routerLinkActive="active">
+                <span class="icone">▦</span>
+                <span class="texto-link">Perfil</span>
+            </a>
         </nav>
     </aside>
     <main>
-        <button type="button" class="botao-menu" (click)="alternarMenu()">Abrir menu</button>
+        <button type="button" class="botao-menu" aria-label="Abrir menu" (click)="alternarMenu()">
+            ☰
+        </button>
         <router-outlet />
     </main>
 </div>
