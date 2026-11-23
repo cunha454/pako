@@ -1,578 +1,262 @@
-# Pako — Plano detalhado de execução do frontend web
+# Pako — Planejamento diário do frontend web
 
-> **Período:** 13/11/2026 a 11/12/2026  
-> **Entrega final:** sexta-feira, 11/12/2026  
-> **Entregas intermediárias:** 13/11, 20/11, 27/11 e 04/12/2026  
-> **Tecnologia:** Angular (versão e estrutura existentes a verificar no repositório)  
-> **Escopo:** interface web do vendedor; base visual isolada da branch com simulações criada na semana final  
-> **Estado do documento:** plano de execução aprovado em suas diretrizes funcionais e visuais; ajustes técnicos dependem da inspeção do código existente.
+> **Período:** 13/11/2026 a 11/12/2026.  
+> **Entrega final:** **sexta-feira, 11/12/2026**.  
 
----
+## 1. Como executar este plano
 
-## 1. Objetivo do documento
+Cada dia de desenvolvimento apresenta um **objetivo**, uma **sequência de atividades** e uma **entrega concreta**. As regras detalhadas de campos, status, privacidade e componentes estão em `DECISOES_PROJETO.md`, sem repetição integral aqui. A implementação deve contemplar as **oito telas**: Login, Cadastro, Meu perfil, Nova encomenda, Simular frete, Entregas agendadas, Entregas concluídas e Dashboard.
 
-Orientar, **dia a dia**, a construção do frontend do Pako, uma plataforma de gestão e agendamento de entregas. Cada dia contém o objetivo, a sequência de execução, os comportamentos esperados e os testes de conclusão. As **sextas-feiras são marcos de entrega**, não apenas dias de desenvolvimento: ao final de cada uma deve existir uma parte utilizável e demonstrável do frontend.
+As funcionalidades visuais e demonstrativas serão construídas progressivamente, com a integração das interações a cada nova tela. Validações de formulário, restrições de status e acessibilidade continuam como parte da implementação.
 
-O projeto completo, conforme o `README.md`, considera um frontend Angular para vendedores, backend Python/FastAPI, banco MySQL, um bot do Telegram para clientes e um aplicativo para entregadores. **Este documento não implementa essas outras partes**. As telas devem ser preparadas para integração futura, sem simular que dados fictícios sejam dados reais.
+## 2. Visão geral dos marcos
 
-### 1.1 O que será entregue
-
-- Oito páginas principais do vendedor: **Login, Cadastro, Dashboard, Meu perfil, Nova encomenda, Simular frete, Entregas agendadas e Entregas concluídas**.
-- Fluxos auxiliares integrados às páginas, sem alterar a contagem das oito telas: recuperação e confirmação de e-mail, alteração de senha, modal de detalhes, modal de avaliação, modal de cancelamento e aba **Canceladas** dentro de Entregas concluídas.
-- Componentes reutilizáveis para campos, validação, sidebar, modais, notificações, tabelas, paginação, estados vazios, skeleton loading e gráficos.
-- Base visual utilizável sem dados operacionais; **simulações e estado demonstrativo em memória somente na branch separada da semana final**.
-- Interface responsiva para desktop e celular e documentação técnica mínima para executar/demonstrar a aplicação.
-
-### 1.2 Fora do escopo desta fase
-
-- Backend FastAPI, banco MySQL, endpoints e persistência permanente.
-- Autenticação real, emissão de tokens, envio de SMS ou e-mail e redefinição verdadeira de senha.
-- Bot do Telegram funcional, integração com app do entregador e roteirização.
-- Endereço real do cliente na área do vendedor; não criar campos, respostas de mock nem detalhes que revelem esse endereço.
-- Pagamentos, cálculo real de preço/prazo, contratação de entregadores, notificações push e rastreamento real.
-- Definição de infraestrutura de produção e publicação pública, salvo decisão posterior.
-
-> **Regra de honestidade da interface:** resultados de frete, links, autenticação, e-mails e mudanças de status devem ser identificáveis como simulados na demonstração. Nenhum botão deve aparentar realizar uma integração externa efetiva.
-
----
-
-## 2. Calendário e estratégia de trabalho
-
-| Marco | Sexta-feira | Semana de execução | Resultado esperado |
-|---|---|---|---|
-| 1 | **13/11/2026** | 13/11 | Fundação técnica, tema e navegação inicial |
-| 2 | **20/11/2026** | 16–20/11 | Login, Cadastro e Meu perfil |
-| 3 | **27/11/2026** | 23–27/11 | Nova encomenda e Simular frete: formulários e visual, sem cálculos fictícios ativos |
-| 4 | **04/12/2026** | 30/11–04/12 | Tabelas, modais e Dashboard visual, sem fluxos simulados |
-| 5 | **11/12/2026** | 07–11/12 | Nova branch de demonstração, simulações completas, integração, testes e entrega final |
-
-**Ritmo semanal:** segunda a quarta para construção; quinta para integração, alinhamento e revisão; sexta para testes de aceite, correções críticas e apresentação.
-
-**Separação obrigatória:** até a sexta **04/12** desenvolver apenas o site visual na branch de frontend. Na **segunda 07/12**, a partir de um commit validado dessa base, criar uma **nova branch de simulação**. Não mesclar automaticamente os controles de teste na branch visual. No dia 11/12, apresentar a branch visual e a branch de demonstração separadamente.
-
-**Prioridade em caso de atraso:** (1) fluxo navegável e regras de privacidade; (2) operações principais; (3) filtros/paginação; (4) refinamentos visuais. Não encurtar os testes da entrega final para acrescentar funcionalidades fora do escopo.
-
-### 2.1 Definição de pronto para qualquer tarefa
-
-Uma tarefa só deve ser marcada como concluída quando: o código compila; não há erro impeditivo no navegador; o fluxo pode ser demonstrado; o comportamento mobile correspondente foi verificado; dados fictícios não expõem informações vedadas; e o trabalho está registrado em commit ou outra trilha de versionamento adotada pela equipe.
-
-### 2.2 Registro de avanço
-
-No encerramento de cada dia, registrar: tarefas concluídas, arquivos/componentes alterados, testes executados, bloqueios, decisões tomadas e foco do dia seguinte. Na sexta-feira, registrar adicionalmente o resultado da demonstração, defeitos encontrados e ajustes pendentes.
-
----
-
-## 3. Regras de produto já decididas
-
-### 3.1 Cadastro, Login e perfil
-
-- Cadastro em **três etapas**: (1) Identificação, (2) Endereço de coleta, (3) Dados de acesso.
-- Pessoa Física: **nome completo e CPF obrigatórios**, nome comercial opcional; Pessoa Jurídica: **CNPJ e nome fantasia obrigatórios**; ambos exigem telefone com DDD.
-- Sem verificação de telefone por SMS. E-mail deve ser confirmado antes do primeiro acesso; ambos os fluxos serão simulados.
-- Um único endereço fixo de coleta, com consulta de CEP simulada e edição manual dos campos preenchidos.
-- E-mail, senha e confirmação de senha na etapa final; senha com pelo menos oito caracteres, uma maiúscula, uma minúscula, um número e um símbolo; campos de senha com opção mostrar/ocultar.
-- Login com e-mail **ou** CPF **ou** CNPJ e senha, sem opção “Manter conectado”. Após confirmação do e-mail: Login; após Login simulado: Dashboard.
-- Recuperação de senha por e-mail simulada. Meu perfil inicia em modo leitura, com botão **Editar perfil**, **Alterar senha** e **Sair da conta**; sair exige confirmação.
-- Navegar entre etapas preserva os valores em memória; atualizar/fechar a página não deve recuperar um rascunho. Não persistir senhas em armazenamento local.
-
-### 3.2 Nova encomenda
-
-- Um pedido contém **um único pacote**, mesmo que reúna vários produtos.
-- Número sequencial gerado automaticamente: **0001, 0002, 0003...**.
-- Campos obrigatórios: altura, largura e comprimento em **cm**, peso em **kg** com decimal.
-- Cuidados especiais opcionais e combináveis: **Frágil**, **Manter na posição vertical**, **Perecível**.
-- Não solicitar valor comercial dos produtos, nome do remetente a cada pedido nem endereço do destinatário.
-- Remetente é o vendedor, a partir do perfil; o cliente informa seu nome e demais dados futuramente pelo Telegram.
-- Criar pedido produz um link **fictício** em modal de confirmação com **Copiar link**. Ao fechar o modal, navegar para Entregas agendadas.
-- Pedido recém-criado aparece como **Aguardando cliente**, sem nome de cliente nem horários até que a simulação de agendamento os forneça.
-
-### 3.3 Simular frete
-
-- Endereço de origem obtido do perfil; entrada de **CEP de destino**, altura, largura, comprimento e peso.
-- Resultado contém **valor estimado em R$ e prazo estimado** — ambos fictícios.
-- Independente de Nova encomenda: **não cria pedido nem reaproveita os dados em um cadastro**.
-- Permitir editar valores e simular novamente; oferecer **Nova simulação** para limpar entradas e resultado.
-
-### 3.4 Entregas agendadas
-
-- Mostrar pedidos desde a criação até antes da conclusão ou do cancelamento.
-- Status ativos: **Aguardando cliente**, **Aguardando coleta**, **Em transporte**.
-- Tabela desktop com **Pedido**, **Cliente**, **Status**, **Recebimento**, **Coleta prevista**.
-- Ordenação padrão: previsão de coleta mais próxima; pedidos sem previsão ao final. Permitir outras opções por **seletor Ordenar por**; cabeçalhos não são clicáveis.
-- Pesquisa automática por nome ou número do pedido, com botão **X**; filtro por status; botão **Limpar filtros**; controles distribuídos em duas linhas.
-- Número do pedido abre modal de detalhes. **Nunca mostrar o endereço do cliente**. Enquanto Aguardando cliente, mostrar novamente link fictício e Copiar link.
-- Atualizações simuladas de status reorganizam a tabela conforme a ordenação ativa, preservando pesquisa, filtros e página atual quando possível; linha atualizada recebe destaque verde suave.
-- Ao concluir: retirar de Agendadas e incluir em Concluídas. Ao cancelar antes da coleta: retirar de Agendadas e incluir na aba Canceladas.
-
-### 3.5 Entregas concluídas e canceladas
-
-- Página **Entregas concluídas** com abas **Concluídas** e **Canceladas**, ambas com tabelas próprias.
-- Colunas de Concluídas: **Pedido**, **Cliente**, **Data da entrega**, **Avaliação**, **Ação**; ordenação padrão da conclusão mais recente para a mais antiga.
-- Filtro de período por **data inicial e final**, e filtro **Todas / Avaliadas / Pendentes de avaliação**.
-- Avaliação geral de **1 a 5 estrelas** e comentário opcional; avalia-se **uma única vez por entrega**. Após avaliar, oferecer consulta à avaliação no lugar do botão Avaliar.
-- Cancelamento permitido **somente antes da coleta**, com **motivo obrigatório** e modal de confirmação. Histórico de Canceladas consultável; não incluir cancelamentos entre as entregas efetivamente concluídas.
-
-### 3.6 Dashboard
-
-- Indicadores: **Entregas concluídas no mês** e **Entregas aguardando coleta**. O segundo direciona para Entregas agendadas.
-- Dois atalhos discretos no topo direito: **Nova encomenda** e **Simular frete**.
-- Abaixo, dois gráficos em painéis separados lado a lado no desktop: **barras de concluídas por mês**, com filtro de ano; **linha de concluídas por dia**, com filtro conjunto de mês/ano. Filtros independentes e centralizados **abaixo** de cada gráfico.
-- O indicador mensal de concluídas acompanha o mês/ano escolhido no gráfico diário.
-- Sem histórico recente, excesso de indicadores nem botão Atualizar. Em telas estreitas, empilhar gráficos.
-- Como o estado inicial não contém encomendas, indicadores começam em zero; gráficos devem exibir zeros/estado apropriado sem quebrar.
-
-### 3.7 Visual, tabelas e interações globais
-
-- Tema **somente claro**, verde principal `#174B35`, fundo `#F5F7F5`, painéis `#FFFFFF`, bordas finas, sem sombras marcantes; cantos por volta de **6 px**; fonte **Inter**; espaçamento equilibrado.
-- Sidebar verde-escura: expandida ou recolhida no computador; menu oculto e sobreposto no celular.
-- Tabelas sem seleção múltipla; **20 registros/página**, paginação inferior e cabeçalho fixo na área rolável. No celular, apenas colunas essenciais e modal responsivo para detalhes.
-- Controles de tabelas em duas linhas: **pesquisa + Limpar filtros**; depois **filtros + Ordenar por**. Pesquisa automática com pequeno debounce, sem botão Pesquisar.
-- Filtrar ou pesquisar volta à primeira página; atualização automática mantém página atual se ela existir, senão vai para a última disponível; **Limpar filtros** restaura pesquisa, filtros, ordenação e primeira página.
-- Estados vazios com mensagem explicativa e ação contextual quando útil. Loading por **skeletons**.
-- Status por etiquetas discretas com cores suaves e texto: Aguardando cliente, Aguardando coleta, Em transporte, Concluída e Cancelada (histórico).
-- Notificações temporárias no canto superior direito por **8 segundos**, com fechamento manual; sucesso, erro e atualização informativa. Atualizações de linha recebem destaque suave temporário.
-- Campo obrigatório marcado com `*`; erro abaixo do campo ao perder foco ou ao tentar continuar/salvar; corrigir remove erro; formulário inválido não avança.
-- Se há alteração não salva, tentar sair/cancelar deve abrir confirmação de descarte. A interceptação de fechamento/atualização do navegador será limitada ao que o navegador permitir.
-
----
-
-## 4. Diretrizes de execução técnica
-
-Estas são **sugestões de implementação**, não afirmações sobre arquivos já existentes. Devem ser adaptadas após inspeção do repositório.
-
-### 4.1 Antes de escrever código
-
-1. Ler o `README.md` e as configurações reais do projeto (`package.json`, `angular.json`, estrutura `src/`, rotas e testes existentes).
-2. Verificar a versão do Angular e as bibliotecas **já instaladas**; não impor uma versão ou adicionar frameworks desnecessários.
-3. Inspecionar o Git (`git status`, branch atual, remotes, diferenças locais) antes de criar `feature/frontend-visual` ou sincronizar branches; não descartar alterações pré-existentes.
-4. Identificar a estratégia existente para componentes standalone ou módulos, formulários, estilos e roteamento; seguir esse padrão.
-5. Verificar se há biblioteca de gráficos ou componentes adequada. Só introduzir dependência nova após avaliar peso, manutenção e compatibilidade.
-6. Executar os comandos de instalação/build/test **definidos no próprio projeto**; `npm install`, `npm start`, `ng serve`, `ng build` e `ng test` são exemplos, não instruções universais.
-
-### 4.2 Organização sugerida
-
-```text
-src/app/
-  core/                 # navegação, contratos, tipos e utilitários; demo só na branch derivada
-  shared/               # campos, validações, modais, tabela, toast, skeleton, etc.
-  layouts/              # shell do vendedor, sidebar, menu mobile e acesso
-  pages/
-    login/
-    cadastro/
-    dashboard/
-    perfil/
-    nova-encomenda/
-    simular-frete/
-    entregas-agendadas/
-    entregas-concluidas/
-```
-
-A organização final deve respeitar o padrão encontrado no projeto. Os fluxos auxiliares de e-mail e senha podem ser componentes ou rotas secundárias; **não precisam criar novas entradas na sidebar**.
-
-### 4.3 Separação entre a versão visual e a versão simulada
-
-**Objetivo:** ter duas versões identificáveis do mesmo frontend, sem acrescentar controles de demonstração à versão visual normal.
-
-| Versão | Branch sugerida | Conteúdo e limite |
+| Data | Tipo | Resultado que deve estar disponível |
 |---|---|---|
-| Site visual (base) | `feature/frontend-visual` | Oito páginas, rotas, validações e componentes; interfaces preparadas para integração, sem estado operacional fictício, transições automáticas nem botões de demonstração. |
-| Site simulado (derivada) | `feature/frontend-simulacoes` | Tudo da base + `DemoDataService` em memória, ações fictícias de cliente/entregador, confirmações simuladas de login/e-mail, cálculo fictício de frete, links, indicadores e gráficos alimentados pelas ações. |
+| **13/11 (sex)** | Abertura do projeto | Fundação técnica, tema, oito rotas e `AppShell` com Sidebar e navegação inicial |
+| **24–26/11** | Desenvolvimento | Layout de autenticação, Login ,Cadastro completo, fluxos de acesso demonstrativo, perfil e estrutura compartilhada |
+| **27/11 (sex)** | **Demonstração 1** | Login, Cadastro em três etapas, Perfil e fluxos auxiliares de conta |
+| **30/11–03/12** | Desenvolvimento | Nova encomenda, frete fictício, tabela de Agendadas e transições demonstrativas |
+| **04/12 (sex)** | **Demonstração 2** | Criação de pedidos, simulação de frete e evolução de entregas em Agendadas |
+| **07–10/12** | Desenvolvimento | Concluídas, Canceladas, avaliações, Dashboard e integração completa de estados |
+| **11/12 (sex)** | **Apresentação final** | Oito telas e ciclo demonstrativo completo em uma única branch |
 
-**Procedimento Git obrigatório (07/12):**
+## 3. Abertura do projeto — 13/11
 
-1. Inspecionar o repositório real com `git status`, `git branch --show-current`, `git branch --list` e `git log -1 --oneline`; confirmar a branch base. **Não executar checkout com alterações não commitadas sem preservá-las**.
-2. Resolver alterações locais de maneira explícita (commit na branch de origem ou stash com identificação e recuperação posterior). Não descartar arquivos ou reescrever commits existentes.
-3. Garantir que a versão visual compile e esteja registrada em commit. Se a branch `feature/frontend-visual` já existir, reutilizá-la; não sobrescrever branches homônimas.
-4. A partir do commit confirmado da versão visual, criar `feature/frontend-simulacoes`, somente se ainda não existir e após verificar que é o ponto correto de partida. Exemplo **condicional**: `git switch feature/frontend-visual` e `git switch -c feature/frontend-simulacoes`.
-5. Registrar o SHA do commit da base no diário de execução. Implementar as simulações **somente** na nova branch.
-6. Após a criação, verificar a branch ativa com `git branch --show-current` antes de qualquer alteração. Fazer commits pequenos por grupo de simulações e rodar build/testes.
-7. Na entrega final, manter as duas branches separadas: **não fazer merge nem cherry-pick de simulações para `feature/frontend-visual`** sem autorização posterior. Comparar `git diff feature/frontend-visual...feature/frontend-simulacoes` e demonstrar o isolamento.
+### Sexta-feira, 13/11 — Fundação técnica, tema e AppShell
 
-> **Observação:** nomes são sugestões. É necessário conhecer a configuração real do repositório para executar esses comandos. Este plano **não cria a branch no repositório**; apenas determina quando e como criá-la durante a execução.
+**Objetivo:** estabelecer a base Angular do frontend, com identidade visual e navegação inicial para as oito páginas do vendedor.
 
-### 4.3.1 Contrato das interfaces antes da simulação
+**Atividades em ordem:**
 
-- Na base visual, criar contratos/tipos de `Vendedor`, `Pacote`, `Encomenda`, `Avaliacao`, `Cancelamento` e `ResultadoFrete`, **sem popular dados** e sem enviar informações para servidores.
-- Botões que dependerão de integrações futuras não devem fingir sucesso na base: podem estar visivelmente indisponíveis, ter uma descrição de funcionalidade futura ou abrir prévias estritamente visuais. Evitar fluxo fictício ativo antes da branch de demonstração.
-- Separar componentes da camada de operações: as páginas não devem conter `Math.random`, atualização improvisada de status ou CEPs inventados. Na branch de demonstração, injetar/adaptar provedores locais para as ações.
-- Para testar a base antes de 07/12, usar testes de componentes, estados vazios, stories/previews isoladas ou fixtures de testes **fora do fluxo operacional do site**. Não iniciar a experiência com pedidos carregados.
+1. Examinar a estrutura real do repositório Angular, incluindo `package.json`, `angular.json`, `src/`, rotas, dependências e comandos existentes. Conferir o estado do Git antes de modificar arquivos.
+2. Organizar páginas, layouts, componentes compartilhados, tipos e serviços conforme o padrão adotado pelo projeto. Utilizar uma única branch para o desenvolvimento.
+3. Definir os estilos globais do tema claro: verde `#174B35`, fundo `#F5F7F5`, painéis brancos, bordas discretas, raio aproximado de `6px`, fonte Inter, espaçamentos, botões e foco visível.
+4. Construir o `AppShell` das páginas internas com área principal e Sidebar verde-escura, incluindo itens de navegação, indicação da rota ativa e estrutura para expansão/recolhimento no desktop e menu sobreposto no celular.
+5. Configurar as oito rotas principais — Login, Cadastro, Dashboard, Meu perfil, Nova encomenda, Simular frete, Entregas agendadas e Entregas concluídas — com páginas iniciais identificadas e sem dados operacionais inventados.
+6. Preparar os elementos visuais básicos reutilizáveis, como botões, painéis e etiquetas, mantendo consistência entre páginas e tamanhos de tela.
 
-### 4.3.2 Modelos de dados usados somente na branch de demonstração
+**Entrega do dia:** fundação Angular organizada, tema inicial aplicado, `AppShell` e Sidebar básicos e oito rotas navegáveis. Esta sexta marca a abertura do desenvolvimento; as sextas posteriores são reservadas às demonstrações.
 
-| Modelo | Campos necessários | Observações |
-|---|---|---|
-| `Vendedor` | tipo PF/PJ, nome de exibição, CPF/CNPJ de teste, telefone, e-mail, endereço de coleta | Apenas informações fictícias, sem senhas armazenadas |
-| `Pacote` | alturaCm, larguraCm, comprimentoCm, pesoKg, frágil, vertical, perecível | Valores numéricos, formatação pt-BR na interface |
-| `Encomenda` | id, código, pacote, status, link fictício, criação, nomeCliente?, recebimento?, coletaPrevista?, conclusao?, cancelamento?, avaliacao? | **Não conter endereço do cliente no modelo exposto ao vendedor** |
-| `Avaliacao` | estrelas (1–5), comentário opcional, data | No máximo uma por entrega concluída |
-| `Cancelamento` | motivo obrigatório, data | Antes da coleta apenas |
-| `ResultadoFrete` | valorEstimado, prazoEstimado, indicador demonstrativo | Sem cotação real e sem criação de encomenda |
+## 4. Semana de 23 a 27/11 — Conta, cadastro e perfil
 
-**Estado inicial do demo:** sem vendedor pré-logado e sem encomendas. Ao criar pedidos, gerar sequência `0001`, `0002` etc. em memória. Reset ao recarregar é permitido. Não usar `localStorage` para senhas, dados sensíveis ou endereço de cliente. Consulta de CEP, frete, confirmação de e-mail, recuperação de senha e login têm respostas **explicitamente demonstrativas**. Agendamento, coleta e conclusão devem ser acionados por controles identificados como **Modo demonstração**, e nunca por bot real.
+### Segunda-feira, 23/11 — Layout de autenticação e Login
 
-### 4.4 Componentes compartilhados prioritários
+**Objetivo:** construir a tela de Login e a estrutura visual de acesso ao sistema, aproveitando a navegação geral já definida.
 
-- `AppShell`/`Sidebar`: navegação desktop/mobile, estados expandido/recolhido.
-- `FormField`: label, asterisco obrigatório, ajuda, entrada e erro abaixo do campo.
-- `PasswordField`: alternância visível/oculto e validação.
-- `ConfirmDialog` e `DetailsDialog`: modais acessíveis, fechar, cancelar, confirmar.
-- `ToastService`/`ToastContainer`: sucesso/erro/informação, duração de 8 s, fechar manualmente.
-- `DataTable`: paginação 20, sticky header, estados vazios e skeleton; campos de pesquisa/filtros ficam em área externa configurável.
-- `StatusBadge`: texto e cor suave consistentes.
-- `EmptyState` e `Skeleton`: para listas e Dashboard.
-- Contratos e interfaces de serviços na branch visual; `OrderStore`/`DemoDataService` com estado compartilhado e transições fictícias **apenas na branch de simulação**.
+**Atividades em ordem:**
 
-**Acessibilidade mínima:** rótulos associados aos campos, navegação por teclado, foco visível, ícones com descrição quando forem botões, modal com gerenciamento de foco, mensagens de erro legíveis, contraste adequado e status compreensíveis sem depender exclusivamente de cores.
+1. Criar o `AuthLayout` separado do `AppShell`, com apresentação adequada ao desktop e ao celular.
+2. Montar o formulário de Login com identificador (e-mail, CPF ou CNPJ) e senha, seguindo o tema e os componentes visuais do projeto.
+3. Implementar a opção de mostrar/ocultar a senha, os campos obrigatórios e mensagens de validação de preenchimento.
+4. Adicionar links para Cadastro e Recuperação de senha, definindo as rotas auxiliares correspondentes.
+5. Organizar estados de foco, tabulação por teclado, espaçamento dos campos e adaptação responsiva.
+6. Preparar a ação de Entrar para o acesso demonstrativo que será conectado junto ao fluxo de cadastro, identificando claramente a ausência de autenticação real.
 
----
+**Entrega do dia:** Login com layout próprio, campos, validações, navegação auxiliar e apresentação responsiva.
 
-# 5. Execução diária e entregas
+### Terça-feira, 24/11 — Cadastro: identificação e endereço de coleta
 
-## Semana 1 — 13/11/2026 — Fundação técnica
+**Objetivo:** completar as duas primeiras etapas do cadastro, com navegação e dados de formulário em memória.
 
-### Sexta-feira, 13/11 — Inspeção, organização, tema e navegação inicial
+**Atividades em ordem:**
 
-**Objetivo:** criar uma base sólida e executável sem assumir que o repositório está vazio.
+1. Criar o fluxo de três etapas com progresso visível, botões Voltar/Continuar e preservação dos valores enquanto o usuário navega; reutilizar componentes de campo do Login.
+2. Implementar na etapa **Identificação** a escolha PF/PJ e exibir os campos específicos: PF (nome completo, CPF, telefone, nome comercial opcional) e PJ (CNPJ, nome fantasia, telefone).
+3. Aplicar máscaras de CPF/CNPJ e telefone, obrigatoriedade e mensagens de formato; impedir avanço com campos inválidos e evitar misturar dados de PF e PJ.
+4. Implementar a etapa **Endereço de coleta**, com CEP, rua, número, bairro, cidade, UF e complemento opcional; restringir o cadastro a um endereço de coleta.
+5. Criar uma pequena fonte local de CEPs ilustrativos para preencher campos quando houver correspondência e permitir edição manual; no CEP desconhecido, deixar o preenchimento manual disponível. Identificar a consulta como **demonstrativa**.
+6. Ajustar grade de campos, avanço/retorno entre etapas e layout em celular; adicionar confirmação de descarte se houver alterações ao sair do formulário.
 
-**Passo a passo:**
+**Entrega do dia:** etapas 1 e 2 completas, navegáveis, com dados preservados durante o formulário e CEP demonstrativo.
 
-1. Abrir o repositório, ler o `README.md`, identificar scripts e dependências, checar `git status` e confirmar a estratégia de branch sem sobrescrever trabalho existente.
-2. Executar a aplicação como ela existe; registrar erros de instalação/execução já presentes. Corrigir somente os problemas que bloqueiem a fundação.
-3. Mapear as oito rotas principais e criar páginas provisórias com títulos claros. Rotas auxiliares de recuperação de senha e confirmação de e-mail podem ser adicionadas na Semana 2.
-4. Configurar os tokens visuais: verde `#174B35`, fundo `#F5F7F5`, branco, borda discreta, raio `6px`, tipografia Inter e espaçamento padrão. Garantir fallback de fonte adequado.
-5. Construir um `AppShell` simples com sidebar desktop em verde, menu de navegação, estado ativo e área principal. Preparar botão de recolher; no mobile, iniciar a estrutura do menu sobreposto.
-6. Implementar um primeiro conjunto de estilos base: botões, painéis, foco, etiquetas e largura de conteúdo. Deixar componentes compartilhados completos para as próximas semanas.
-7. Testar manualmente: carregar a aplicação, abrir todas as rotas, confirmar item ativo, verificar alinhamento com sidebar expandida/recolhida e inspecionar no tamanho de celular.
+### Quarta-feira, 25/11 — Cadastro: acesso, confirmação de e-mail e Login demonstrativo
 
-**Entregável de sexta (Marco 1):** frontend executável, oito rotas provisórias e identidade visual consistente, com navegação básica demonstrável.
+**Objetivo:** finalizar o cadastro e permitir entrar na aplicação por um fluxo explicitamente fictício.
 
-**Aceite:** [ ] build funciona; [ ] páginas são acessíveis; [ ] tema aplicado; [ ] sidebar visível; [ ] navegação sem erro impeditivo; [ ] padrões da base documentados.
+**Atividades em ordem:**
 
----
+1. Implementar a etapa **Dados de acesso**: e-mail, senha e confirmação; exigência de oito caracteres, maiúscula, minúscula, número e símbolo, com opção mostrar/ocultar.
+2. Conectar as três etapas num fluxo único com retorno sem perda de dados e bloqueio de conclusão quando houver campos inválidos.
+3. Criar a camada local de demonstração (serviço/estado compartilhado) para representar vendedor e confirmação de e-mail, sem persistir senha nem iniciar com usuário cadastrado.
+4. Ao concluir o cadastro, abrir tela de confirmação de e-mail **simulada**. Disponibilizar controle identificado para marcar confirmação demonstrativa e então encaminhar ao Login; não simular envio real.
+5. Ligar o Login ao acesso demonstrativo e redirecionar para Dashboard após o fluxo ilustrativo; tratar claramente o fato de não existir autenticação real.
+6. Criar interface de recuperação/redefinição de senha, com mensagens de demonstração e sem envio de mensagem verdadeira; manter opção de voltar ao Login.
+7. Integrar o Login e o fluxo de cadastro ao `AppShell` e às rotas internas definidas na abertura do projeto; preparar o rótulo de Modo demonstração nos pontos apropriados.
 
-## Semana 2 — 16 a 20/11 — Acesso, cadastro e perfil (somente versão visual)
+**Entrega do dia:** cadastro PF/PJ de três etapas com acesso fictício, confirmação de e-mail e recuperação visual de senha.
 
-### Segunda-feira, 16/11 — Layout de autenticação e Login
+### Quinta-feira, 26/11 — Meu perfil e estrutura comum do aplicativo
 
-**Executar:** (1) criar `AuthLayout` dividido desktop e faixa verde mobile; (2) renderizar campos de identificador e senha; (3) criar botão olho, asteriscos e erros por `blur`/envio; (4) adicionar links visuais para Cadastro e Recuperação de senha; (5) configurar rotas e foco/teclado. **Não criar autenticação falsa nem liberar login a partir de credenciais arbitrárias na base.** A ação Entrar deve indicar que aguarda integração ou ficar inativa com explicação. O fluxo demonstrativo será conectado em 07/12.
+**Objetivo:** fechar o conjunto de conta e deixar a navegação pronta para as páginas operacionais.
 
-**Verificar:** ambos os layouts, regras de erro, teclado, leitura de senha, links e ausência de navegação que alegue sessão autenticada.
+**Atividades em ordem:**
 
-### Terça-feira, 17/11 — Cadastro, etapa 1
+1. Criar **Meu perfil** no modo leitura, com identificação do vendedor, contato e endereço de coleta retirados do estado local do cadastro.
+2. Implementar **Editar perfil**, com possibilidade de cancelar ou salvar alterações no estado demonstrativo; manter regras de PF/PJ e endereço único.
+3. Criar o modal **Alterar senha**, com campos e regras de senha, mas aviso de que a alteração é demonstrativa e não produz credencial real persistida.
+4. Criar modal de confirmação para **Sair da conta** e fazer o retorno visual ao Login; tratar também descarte de alterações não salvas.
+5. Refinar a Sidebar e o `AppShell` iniciados em 13/11: concluir expandir/recolher no desktop, menu sobreposto no celular, estados ativos e navegação das oito rotas, mantendo páginas ainda não implementadas em estado vazio.
+6. Consolidar `FormField`, `PasswordField`, botões, painéis, `ConfirmDialog` e notificações; aplicar tema claro, fonte Inter, cores e espaçamento definidos.
+7. Deixar os controles de acesso e perfil coerentes entre telas, com mensagens explícitas sobre o caráter demonstrativo.
 
-**Executar:** (1) criar formulário em etapas com barra de progresso visual; (2) permitir seleção PF/PJ; (3) campos PF: nome, CPF, telefone, nome comercial opcional; PJ: CNPJ, nome fantasia, telefone; (4) máscaras e validação de formato; (5) preservar dados enquanto navega pelas etapas; (6) bloquear etapa seguinte com erros. **Sem criar perfil fictício persistente.**
+**Entrega do dia:** conjunto de conta, Meu perfil, navegação global e componentes reutilizáveis principais.
 
-**Verificar:** asteriscos, mensagens após foco/continuar, PF/PJ, alternância sem mistura dos dados, mobile.
+### Sexta-feira, 27/11 — Demonstração 1 (sem desenvolvimento previsto)
 
-### Quarta-feira, 18/11 — Cadastro, etapas 2 e 3
+**Roteiro de apresentação:** apresentar a estrutura inicial do frontend, o tema claro, as oito rotas e o `AppShell` com Sidebar; mostrar a tela de Login, alternância de senha e links auxiliares; percorrer Cadastro PF e PJ com suas três etapas; usar consulta ilustrativa de CEP e edição manual; apresentar confirmação de e-mail e acesso demonstrativos; abrir Meu perfil, editar os dados, alterar senha de forma ilustrativa e sair. Mostrar a Sidebar em desktop e o menu mobile. Explicar que autenticação, e-mail e CEP ainda não são serviços reais.
 
-**Executar:** (1) CEP, rua, número, bairro, cidade, UF e complemento; (2) criar campos e estados visuais para o futuro preenchimento pelo CEP, mas **não retornar CEPs fictícios ainda**; (3) permitir correção manual; (4) e-mail, senha e confirmação com os cinco critérios; (5) progressão Voltar/Continuar com dados preservados; (6) tela visual de confirmação de e-mail com mensagem inequívoca de integração futura, **sem simular envio ou ativação**; (7) modal de descarte de alterações.
+**Marco da semana:** fundação visual e navegação global estabelecidas, com fluxo de conta completo e navegável para continuar o desenvolvimento. Registrar comentários recebidos e pendências, sem inserir implementação nova na sexta.
 
-**Verificar:** layout em três etapas, regras de senha, CEP válido/inválido visualmente, retorno entre etapas, ausência de rascunho após refresh.
+## 5. Semana de 30/11 a 04/12 — Encomendas, frete e acompanhamento
 
-### Quinta-feira, 19/11 — Meu perfil e fluxos auxiliares visuais
+### Segunda-feira, 30/11 — Nova encomenda e criação demonstrativa de pedidos
 
-**Executar:** (1) seções de dados, endereço de coleta e segurança; (2) modo leitura e edição com formulários/validações; (3) modais de alterar senha, sair da conta e descartar alterações; (4) telas de recuperação/redefinição de senha; (5) definir pontos de extensão para efeitos de salvar/enviar/entrar, mas **sem confirmação de ações inexistentes**; (6) revisar responsividade e acessibilidade.
+**Objetivo:** possibilitar que um vendedor cadastrado gere encomendas fictícias com informações de pacote.
 
-**Verificar:** abertura/fechamento de modais, campos, navegação, erros, teclado e zero integrações fictícias ativas.
+**Atividades em ordem:**
 
-### Sexta-feira, 20/11 — Entrega 2: telas de acesso e perfil
+1. Criar a página **Nova encomenda**, ligada ao AppShell, com campos obrigatórios de altura, largura, comprimento (cm) e peso decimal (kg), aceitando formato pt-BR.
+2. Adicionar opções combináveis **Frágil**, **Manter na posição vertical** e **Perecível**; não incluir valor dos produtos, remetente manual nem endereço de destinatário.
+3. Criar os contratos `Pacote` e `Encomenda` e uma função local `criarEncomenda` no mesmo serviço compartilhado, com dados iniciais vazios e numeração `0001`, `0002` etc.
+4. Ao salvar dados válidos, gerar status **Aguardando cliente** e link claramente fictício; abrir modal com código e ação **Copiar link**, com mensagem de retorno.
+5. Ao fechar o modal, navegar para **Entregas agendadas**; preparar uma lista básica que já apresente o novo pedido, inicialmente sem cliente nem datas de agendamento.
+6. Disponibilizar confirmação de descarte ao sair de um formulário parcialmente preenchido e adaptar campos/modal para celular.
 
-**Demonstrar:** (1) tela de Login e suas validações; (2) Cadastro nas três etapas e retorno sem perda; (3) campos de PF/PJ; (4) Perfil em consulta e modo edição; (5) modais e recuperação visual. **Não prometer login, e-mail ou alteração de senha realizados.** Executar build/testes, revisar mobile e registrar commit.
+**Entrega do dia:** pedidos criados na sessão, modal com link de demonstração, numeração sequencial e entrada visível em Agendadas.
 
-**Aceite:** [ ] telas navegáveis; [ ] formulários validados; [ ] modais visuais; [ ] base sem serviço de simulação; [ ] nenhum aviso falso de e-mail enviado; [ ] commit da versão visual. **20/11 é feriado; antecipar revisão/apresentação para 19/11 quando necessário.**
+### Terça-feira, 01/12 — Simular frete com resultado local fictício
 
----
+**Objetivo:** concluir a segunda operação principal do vendedor sem criar encomendas.
 
-## Semana 3 — 23 a 27/11 — Formulários de encomenda e frete (somente versão visual)
+**Atividades em ordem:**
 
-### Segunda-feira, 23/11 — Nova encomenda: campos e validação
+1. Criar **Simular frete** com origem obtida do endereço do perfil, CEP de destino, medidas em cm e peso em kg.
+2. Reutilizar campos numéricos e regras de entrada da Nova encomenda; permitir alterar os valores sem modificar o perfil.
+3. Conectar um cálculo **determinístico local** que gere valor estimado em reais e prazo ilustrativo, sem consulta externa; identificar o resultado como não real.
+4. Criar painel de resultado com valor, prazo e aviso de demonstração. Fazer **Simular novamente** usar os dados atuais e **Nova simulação** limpar campos/resultado, preservando a origem do perfil.
+5. Manter o simulador separado da criação de pedidos, sem alterar contador, tabela de Agendadas ou dados da encomenda.
+6. Organizar o layout responsivo e os estados vazios, indisponíveis ou de carregamento visual quando fizer sentido.
 
-**Executar:** (1) formulário com altura/largura/comprimento em cm e peso decimal em kg; (2) entrada numérica pt-BR e conversão consistente; (3) checkboxes opcionais combináveis para Frágil, Vertical e Perecível; (4) erros abaixo do campo por `blur`/envio; (5) confirmação de descarte; (6) responsividade e foco. Não pedir endereço do cliente, valor comercial ou remetente manual.
+**Entrega do dia:** frete demonstrativo completo e independente de Nova encomenda.
 
-**Verificar:** campos positivos, peso `0,250`, zero/negativos inválidos, combinações de cuidados e layout mobile.
+### Quarta-feira, 02/12 — Entregas agendadas: tabela, pesquisa, filtros e detalhes
 
-### Terça-feira, 24/11 — Nova encomenda: modal e contrato de criação
+**Objetivo:** transformar a lista inicial em uma área completa de acompanhamento.
 
-**Executar:** (1) contrato `Encomenda` e interface de operação `criarEncomenda`, sem implementação operacional; (2) desenhar modal de sucesso com número/link **apenas como estrutura visual**, sem gerar pedido ou link com aparência real; (3) inserir placeholders para botão Copiar link e fechamento com navegação; (4) desabilitar/identificar ações não conectadas; (5) preparar tela Agendadas para estado inicial vazio; (6) testar estados de componentes isolados (fixtures fora do uso normal).
+**Atividades em ordem:**
 
-**Verificar:** modal responsivo, campos e layout preparados para o serviço de demonstração da Semana 5; **não existe pedido cadastrado em memória na base visual**.
+1. Construir tabela com **Pedido, Cliente, Status, Recebimento e Coleta prevista**, consumindo a coleção local de encomendas.
+2. Implementar pesquisa automática por nome/código com botão X, filtro de status, seletor **Ordenar por** e **Limpar filtros**, em duas linhas.
+3. Aplicar a ordenação padrão por coleta mais próxima, deixando encomendas sem previsão no final; incluir paginação de **20 registros** e cabeçalho fixo na área de rolagem.
+4. Criar modal ao clicar no número: informações do pacote, status, datas disponíveis e link fictício enquanto **Aguardando cliente**. Não exibir endereço do destinatário.
+5. Criar etiquetas discretas de status, estado vazio com ação **Nova encomenda**, versão mobile com colunas essenciais e modal responsivo.
+6. Preparar toast de sucesso/erro/informação por **8 segundos**, fechamento manual e destaque suave para linha alterada.
+7. Acoplar atualização reativa da tabela ao serviço local, preservando pesquisa, filtros e página atual quando possível.
 
-### Quarta-feira, 25/11 — Simular frete: formulário e resultado visual
+**Entrega do dia:** página Agendadas operacional para consultar, pesquisar, filtrar, ordenar e abrir pedidos.
 
-**Executar:** (1) origem baseada no campo de endereço do perfil quando disponível; (2) CEP de destino, altura, largura, comprimento e peso; (3) painel de resultado com espaços reservados para valor em R$ e prazo; (4) validação de CEP e números; (5) indicação de que cálculo real e demonstrativo ainda não estão conectados; (6) responsividade. **Não executar cálculo fictício nesta branch**.
+### Quinta-feira, 03/12 — Modo demonstração: agendamento, coleta e transporte
 
-**Verificar:** valor inválido, CEP insuficiente, painéis, formatos, nenhum dado criado em Nova encomenda.
+**Objetivo:** permitir apresentar a evolução do pedido depois de sua criação.
 
-### Quinta-feira, 26/11 — Recalcular, limpar e revisão visual
+**Atividades em ordem:**
 
-**Executar:** (1) criar a interface do botão Nova simulação, com limpeza local dos campos (sem simular frete); (2) preparar ação de simular novamente para conectar depois; (3) ajustar formulários compartilhados, modal, skeleton e mensagens; (4) conferir separação entre as páginas de frete e encomenda; (5) revisar desktop/mobile e preparar apresentação.
+1. No modal de detalhes de Agendadas, criar área identificada **Modo demonstração**, separada dos controles normais do vendedor.
+2. Para pedidos em **Aguardando cliente**, permitir preencher **nome fictício** e horário de recebimento; nunca solicitar nem guardar endereço do cliente.
+3. Gerar uma coleta prevista fictícia (a ideia de 30 minutos antes é somente hipótese demonstrativa) e mudar para **Aguardando coleta**.
+4. Para pedidos em **Aguardando coleta**, incluir **Simular coleta** e atualizar para **Em transporte**; impedir transições fora da sequência.
+5. Implementar na camada de estado as bases das ações de **conclusão** e **cancelamento antes da coleta**, com motivo obrigatório; a apresentação completa dessas ações ficará vinculada às telas históricas na semana seguinte.
+6. Atualizar tabela, ordenação, filtros, modal, toast e destaque da linha após mudanças de status, mantendo o funcionamento em desktop e celular.
+7. Deixar visível o significado de cada ação fictícia, sem sugerir integração com Telegram ou aplicativo de entregador.
 
-**Verificar:** formulário limpo sem tocar outras telas, placeholders coerentes e nenhum resultado fictício produzido antes da Semana 5.
+**Entrega do dia:** pedidos podem ser agendados ficticiamente e avançar da coleta para o transporte, com a infraestrutura de conclusão e cancelamento preparada.
 
-### Sexta-feira, 27/11 — Entrega 3: formulários de encomenda e frete
+### Sexta-feira, 04/12 — Demonstração 2 (sem desenvolvimento previsto)
 
-**Demonstrar:** (1) preenchimento e validação de Nova encomenda; (2) design do modal de confirmação em prévia isolada; (3) formulário de frete e painel de resultado ainda sem valores; (4) limpeza do formulário; (5) responsividade e estados vazios. Executar build/testes e registrar commit.
+**Roteiro de apresentação:** entrar como vendedor de demonstração; criar duas encomendas e mostrar numeração, cuidados especiais, link ilustrativo e **Aguardando cliente**; abrir Agendadas, pesquisar e filtrar; simular o agendamento fictício de uma delas, demonstrar previsão de coleta, coleta e transporte; apresentar o simulador de frete com recálculo e limpeza; explicar que os resultados não utilizam serviços reais.
 
-**Aceite:** [ ] duas páginas completas visualmente; [ ] validações corretas; [ ] componentes preparados para integração; [ ] sem pedidos ou links fictícios em execução; [ ] branch visual preservada.
+**Marco da semana:** operações de encomenda e frete demonstráveis, com acompanhamento até **Em transporte**. Conclusão, cancelamento, avaliação e indicadores serão exibidos integralmente na apresentação final.
 
----
+## 6. Semana de 07 a 11/12 — Histórico, Dashboard e fluxo completo
 
-## Semana 4 — 30/11 a 04/12 — Tabelas, modais e Dashboard visual (sem simulações)
+### Segunda-feira, 07/12 — Entregas concluídas, canceladas e mudanças finais de status
 
-### Segunda-feira, 30/11 — Entregas agendadas: tabela e controles
+**Objetivo:** completar os caminhos de conclusão e cancelamento de encomendas.
 
-**Executar:** (1) criar tabela com Pedido, Cliente, Status, Recebimento e Coleta prevista; (2) definir cabeçalho fixo e layout reduzido para celular; (3) criar pesquisa única por nome/número, botão X, filtro por status, seletor de ordenação e Limpar filtros em duas linhas; (4) paginar 20 registros; (5) estado vazio com botão Nova encomenda; (6) aceitar coleção vazia de um provedor futuro. **Não popular pedidos iniciais nem simular mudanças**.
+**Atividades em ordem:**
 
-**Verificar:** estado vazio real; controles sem erros; com fixtures de testes isoladas, validar busca/paginação/ordenador sem adicionar pedidos ao site normal.
+1. Criar a página **Entregas concluídas**, com abas **Concluídas** e **Canceladas**, cada qual com sua tabela e estado vazio.
+2. Na aba Concluídas, mostrar **Pedido, Cliente, Data da entrega, Avaliação, Ação**; incluir busca, período inicial/final, filtro **Todas/Avaliadas/Pendentes de avaliação**, ordenação por conclusão recente e paginação.
+3. Conectar o controle **Simular conclusão**, permitido somente de **Em transporte**, para registrar data/hora e retirar automaticamente a encomenda de Agendadas, incluindo-a em Concluídas.
+4. Criar ação/modal **Cancelar encomenda** exclusivamente antes da coleta, com motivo obrigatório e confirmação; ao aplicar, mover para Canceladas e registrar justificativa e data.
+5. Na aba Canceladas, apresentar código, cliente quando disponível, data e motivo consultável; impedir retorno automático à lista de Agendadas.
+6. Reutilizar `DataTable`, `StatusBadge`, modais, controles de busca e paginação com responsividade; preservar filtros quando houver atualização dos dados.
+7. Manter as duas abas coerentes com a mesma fonte de dados local, sem criar cópias independentes dos pedidos.
 
-### Terça-feira, 01/12 — Detalhes e estados visuais dos pedidos
+**Entrega do dia:** trajetória até Concluída ou Cancelada refletida no histórico correto.
 
-**Executar:** (1) modal de detalhes com campos previstos, link de agendamento como região reservada para Aguardando cliente e controle Copiar link desabilitado até integração; (2) etiquetas suaves para Aguardando cliente, Aguardando coleta e Em transporte; (3) criar templates de confirmação, toast e realce temporário; (4) preparar componentes para atualizar por mudança observável de estado, **sem gatilho de simulação no produto**; (5) garantir ausência do endereço do destinatário.
+### Terça-feira, 08/12 — Avaliações e detalhes do histórico
 
-**Verificar:** modal em desktop/mobile, foco e privacidade; estados por fixtures nos testes isolados.
+**Objetivo:** fechar a consulta e a interação pós-entrega.
 
-### Quarta-feira, 02/12 — Entregas concluídas e avaliações: interface
+**Atividades em ordem:**
 
-**Executar:** (1) aba Concluídas, tabela com Pedido, Cliente, Data da entrega, Avaliação e Ação; (2) filtros por período e situação da avaliação, busca, ordenação e paginação; (3) modal de avaliação com estrelas 1–5 e comentário opcional; (4) modal de visualização da avaliação; (5) preparar componentes para impedir segundo envio **quando o serviço de simulação for conectado**; (6) estado vazio e mobile.
+1. Criar modal de **Avaliar entrega**, disponível somente nas encomendas concluídas e ainda sem avaliação; selecionar **1 a 5 estrelas**, com comentário opcional.
+2. Salvar avaliação no estado compartilhado, vinculada a uma única encomenda; impedir uma segunda avaliação para o mesmo pedido.
+3. Substituir a ação **Avaliar** por **Visualizar avaliação** quando ela existir; criar modal de consulta com nota, comentário e informações da encomenda.
+4. Atualizar o filtro **Avaliadas/Pendentes de avaliação** para refletir a ação recém-realizada sem perder a pesquisa e o período selecionados.
+5. Revisar o modal de detalhes de Agendadas e os detalhes de Concluídas e Canceladas para apresentar apenas campos pertinentes a cada status.
+6. Consolidar mensagens de confirmação e erro, fechamento de modal, acessibilidade por teclado e organização das colunas no celular.
 
-**Verificar:** validação da seleção de estrelas, campos, filtros por fixtures isoladas e nenhuma avaliação salva no site visual.
+**Entrega do dia:** histórico completo com avaliações únicas e consulta posterior.
 
-### Quinta-feira, 03/12 — Canceladas, modais e Dashboard visual
+### Quarta-feira, 09/12 — Dashboard e gráficos ligados às encomendas
 
-**Executar:** (1) aba Canceladas com tabela, consulta ao motivo e data; (2) modal de cancelamento com motivo obrigatório e confirmação, sem efetivar cancelamento; (3) criar Dashboard com dois indicadores vazios e atalhos Nova encomenda/Simular frete; (4) desenhar painéis de barras anual e linha diária com controles de mês/ano abaixo; (5) reutilizar estados vazios, bordas e responsividade; (6) fazer revisão geral da base visual.
+**Objetivo:** apresentar visualmente os resultados da operação demonstrativa.
 
-**Verificar:** oito telas e abas visuais, zero inicial no Dashboard, modais e filtros, nenhum fluxo de cliente/entregador ativado.
+**Atividades em ordem:**
 
-### Sexta-feira, 04/12 — Entrega 4: site visual completo e congelamento da base
+1. Criar página **Dashboard** e seus atalhos **Nova encomenda** e **Simular frete** no canto superior direito.
+2. Exibir indicadores **Entregas concluídas no mês** e **Entregas aguardando coleta**, calculados a partir do estado local; fazer o indicador de coleta levar para Agendadas.
+3. Criar gráfico de barras de **concluídas por mês**, com seleção de ano abaixo do gráfico.
+4. Criar gráfico de linha de **concluídas por dia**, com seleção conjunta de mês/ano também abaixo; manter os dois filtros independentes.
+5. Fazer o indicador de concluídas acompanhar o mês/ano do gráfico diário; calcular apenas status efetivamente concluídos, sem somar cancelamentos.
+6. Tratar ausência de pedidos com contadores zero, gráfico vazio/zero e mensagem apropriada; alinhar cartões e gráficos lado a lado no desktop e empilhados no celular.
+7. Reutilizar identidade visual e, conforme dependências existentes, escolher a solução de gráficos compatível com o Angular do repositório.
 
-**Demonstrar:** (1) as oito telas, rotas e sidebar; (2) formulário de criação e modal em prévia visual; (3) frete sem cotação fictícia; (4) tabelas vazias, pesquisa, filtros e componentes isoladamente; (5) modais de detalhes, avaliação e cancelamento em prévias de componentes; (6) Dashboard com estrutura e estados vazios; (7) celular e desktop.
+**Entrega do dia:** Dashboard funcional e sincronizado com pedidos concluídos na sessão demonstrativa.
 
-**Fechamento obrigatório:** compilar e executar testes, corrigir bloqueadores, registrar pendências e **fazer commit limpo da branch visual**. Registrar o SHA para a derivação em 07/12. Não fazer demonstração de uma entrega ficticiamente concluída neste marco.
+### Quinta-feira, 10/12 — Integração final, refinamento e preparação da apresentação
 
-**Aceite:** [ ] oito páginas estruturadas; [ ] validações e componentes visuais; [ ] dados operacionais vazios; [ ] sem `DemoDataService` ativo; [ ] build/testes; [ ] base pronta para criar a branch de simulação.
+**Objetivo:** consolidar as oito telas em um fluxo único e deixar a apresentação final pronta. **Não criar funcionalidades fora do escopo.**
 
----
+**Atividades em ordem:**
 
-## Semana 5 — 07 a 11/12 — Branch separada e todas as simulações
+1. Unificar navegação: Login → Cadastro/Confirmação → Perfil/Dashboard → Nova encomenda → Agendadas → Concluídas/Canceladas, sem telas ou ações desconectadas.
+2. Consolidar estado local para que criação, agendamento, coleta, transporte, conclusão, cancelamento e avaliação alterem as mesmas encomendas e os mesmos indicadores; manter início vazio e numeração sequencial.
+3. Garantir que cancelamento só exista antes da coleta e avaliação somente depois da conclusão; manter nome e recebimento em branco enquanto cliente ainda não tiver sido agendado.
+4. Harmonizar campos, mensagens de erro, avisos de simulação, diálogos de descarte, toast por 8 s, skeletons, estados vazios e realces nas páginas.
+5. Finalizar versões desktop e mobile de Sidebar, formulários, tabelas, modais e gráficos, preservando o tema e as colunas essenciais em telas estreitas.
+6. Revisar textos e indicadores de modo demonstrativo para que nenhum fluxo pareça usar e-mail, Telegram, preço, autenticação ou pagamento real. Remover qualquer exposição de endereço do destinatário.
+7. Preparar roteiro de apresentação com dois pedidos criados durante a sessão (um para concluir e avaliar; outro para cancelar), além de exemplo de frete. Incluir explicação do reset dos dados ao recarregar.
+8. Atualizar instruções mínimas de execução no repositório, conforme comandos e dependências efetivos, e registrar o estado final na **branch única**.
 
-> **Regra central da semana:** a versão visual já estará congelada/commitada. A partir de 07/12, trabalhar exclusivamente em uma **nova branch** para simular as integrações e o fluxo ponta a ponta. Os resultados apresentados ao usuário deverão mostrar claramente que são demonstrativos. A entrega final terá dois artefatos lógicos: site visual normal e site de demonstração.
+**Entrega do dia:** frontend do vendedor integrado, oito telas navegáveis e roteiro final organizado.
 
-### Segunda-feira, 07/12 — Criar branch e simular acesso, cadastro e dados do perfil
+### Sexta-feira, 11/12 — Apresentação final
 
-**Objetivo:** isolar e iniciar o ambiente de demonstração sem alterar o site normal.
+**Roteiro de demonstração:**
 
-**Passo a passo:**
+1. Explicar o alcance: frontend Angular do vendedor com simulações locais; sem backend, Telegram, autenticação, pagamento ou frete reais.
+2. Iniciar com a aplicação sem pedidos; mostrar Dashboard zerado e listas vazias.
+3. Percorrer Cadastro PF/PJ, confirmação ilustrativa de e-mail, Login e Meu perfil.
+4. Criar encomendas **0001** e **0002**, exibindo campos, cuidados especiais, links fictícios e entrada em Agendadas.
+5. No pedido **0001**, simular nome fictício e recebimento do cliente, coleta, transporte e conclusão; exibir sua transferência para a aba Concluídas.
+6. Avaliar o pedido **0001** uma vez e mostrar a consulta posterior da avaliação.
+7. No pedido **0002**, cancelar antes da coleta com motivo e mostrar a aba Canceladas.
+8. Demonstrar Simular frete, alterações de parâmetros, novo cálculo e limpeza, sem criar pedidos adicionais.
+9. Mostrar Dashboard atualizado, gráficos, filtros, pesquisa, paginação e apresentação em dispositivo móvel.
+10. Encerrar explicando limites das simulações, ausência do endereço do cliente e funcionamento da versão entregue em **uma branch**.
 
-1. Verificar `git status`, branch ativa, commits locais e existência da branch nova. Se houver alterações não salvas, preservá-las por commit ou stash identificado; jamais descartá-las.
-2. Confirmar build e commit da base `feature/frontend-visual`. **Criar `feature/frontend-simulacoes` a partir dela**, se não existir; conferir com `git branch --show-current` e anotar SHA de origem. Não mesclar de volta sem aprovação.
-3. Criar pasta de implementações demonstrativas (`core/demo/` ou equivalente) e `DemoDataService` com estado **em memória inicialmente vazio**. Separar métodos de criação, atualização, conclusão, cancelamento e avaliação, com validações de transições.
-4. Adicionar vendedor demonstrativo **somente quando o usuário finalizar o cadastro visual**; não pré-carregar uma conta nem gravar senha. Implementar confirmação fictícia de e-mail por botão claramente marcado, direcionando para Login depois da confirmação.
-5. Conectar Login a um **modo de acesso demonstrativo**, sem autenticação real nem alegação de credenciais verificadas; conectar recuperação/redefinição de senha e alteração de senha a confirmações fictícias claramente indicadas, sem enviar e-mails ou persistir senhas.
-6. Implementar mapa local pequeno de CEPs ilustrativos para preenchimento simulado do endereço de coleta, com fallback para edição manual, mensagem de dado demonstrativo e tratamento de CEP desconhecido.
-7. Conectar modo de consulta/edição de Meu perfil ao estado temporário; saída retorna ao Login por fluxo visual, sem sessão de servidor.
-8. Testar: PF/PJ, nome opcional, CEP fictício/desconhecido, regras de senha, confirmação de e-mail, Login de demonstração, perfil, sair e reset após recarregar. Criar commit da etapa.
-
-**Aceite:** [ ] branch derivada do commit correto; [ ] versão visual intacta; [ ] acesso e CEP claramente simulados; [ ] nenhuma senha salva; [ ] dados temporários; [ ] testes/build passam.
-
-### Terça-feira, 08/12 — Simular Nova encomenda e Simular frete
-
-**Objetivo:** fazer os dois formulários funcionarem com dados fictícios, mantendo-os independentes.
-
-**Passo a passo:**
-
-1. Conectar `criarEncomenda` ao serviço temporário. Iniciar lista vazia e contador zero; ao salvar um pacote validado gerar `0001`, depois `0002`, sem duplicidade durante a sessão.
-2. Associar pacote e cuidados especiais ao pedido com status **Aguardando cliente** e data de criação. Sem nome, endereço ou horário do cliente até agendamento posterior.
-3. Criar link demonstrativo **claramente fictício**, sem redirecionar para Telegram verdadeiro. Exibir modal com pedido, link e Copiar link; tratar falhas de clipboard e toast de sucesso com 8 s.
-4. Ao fechar modal, navegar para Agendadas; o pedido deve surgir automaticamente da fonte compartilhada. Permitir copiar o mesmo link novamente no detalhe enquanto Aguardando cliente.
-5. Conectar Simular frete à origem do perfil e à entrada de CEP, dimensões e peso. Usar uma função determinística local **de valores e prazos inventados**; entradas idênticas geram resultados idênticos. Mostrar aviso “Simulação demonstrativa — não é cotação real”.
-6. Fazer Recalcular reutilizar entradas atuais; Nova simulação limpa campos e resultado, sem alterar origem do perfil. **Nunca criar um pedido ao simular frete**.
-7. Testar dois pedidos sequenciais, inputs inválidos, peso decimal, controles especiais, cópia do link, reset de formulário, cálculo repetível, sem vínculo entre frete e pedidos. Criar commit.
-
-**Aceite:** [ ] pedidos criados por interação sem lista pré-carregada; [ ] numeração; [ ] link fictício; [ ] Agendadas refletindo criação; [ ] frete demonstrativo determinístico e independente.
-
-### Quarta-feira, 09/12 — Simular Telegram, coleta, transporte, conclusão, cancelamento e avaliação
-
-**Objetivo:** tornar demonstrável o ciclo inteiro da encomenda, sem implementar bot ou aplicativo do entregador.
-
-**Passo a passo:**
-
-1. Criar uma seção discreta **Modo demonstração** dentro do modal de detalhes (ou controle de testes claramente identificado), disponível **somente na branch simulada**. Ela não representa uma ação permitida ao vendedor no sistema final.
-2. **Simular agendamento do cliente:** quando Aguardando cliente, oferecer entrada de **nome fictício** e horário de recebimento. Não solicitar nem armazenar endereço de cliente na área do vendedor. Atribuir previsão fictícia de coleta; usar “30 min antes” somente como hipótese de demonstração, **não regra definitiva**.
-3. Mudar o pedido para **Aguardando coleta** e atualizar automaticamente a linha, filtros, pesquisa, ordenação por coleta mais próxima e página atual quando possível. Exibir toast 8 s e realce suave temporário.
-4. **Simular coleta:** somente de Aguardando coleta para **Em transporte**. **Simular conclusão:** somente de Em transporte para **Concluída** com data/hora. Remover de Agendadas e incluir na aba Concluídas, sem duplicar.
-5. **Simular cancelamento:** disponível apenas para Aguardando cliente e Aguardando coleta. Exigir motivo não vazio, confirmar e mover à aba Canceladas com data e justificativa. Impedir cancelamento após coleta e reativação na demo.
-6. **Simular avaliação:** em Concluídas, registrar 1–5 estrelas e comentário opcional; após gravar em memória, substituir botão Avaliar por Visualizar avaliação; impedir segunda avaliação por interface e estado.
-7. Testar a sequência inteira e seus caminhos alternativos. Usar somente clientes fictícios. Conferir endereço do cliente ausente de objetos, modais, logs e tabelas; não revelar informações indevidas.
-8. Testar com buscas, filtros e paginação ativos; verificar cabeçalho fixo, layout mobile, destaque e notificação; fazer commit.
-
-**Aceite:** [ ] controles isolados na branch de demo; [ ] transições coerentes; [ ] cancelamento obrigatório; [ ] avaliação única; [ ] tabelas sincronizadas; [ ] privacidade do destinatário.
-
-### Quinta-feira, 10/12 — Simular indicadores e gráficos, testar integração e corrigir
-
-**Objetivo:** fechar o vínculo entre os registros demonstrativos e o Dashboard e executar ensaio da entrega.
-
-**Passo a passo:**
-
-1. Conectar o indicador **Entregas aguardando coleta** ao total de pedidos com esse status, com clique para Agendadas. Conectar **Entregas concluídas no mês** às datas reais de conclusão **dentro do estado fictício**.
-2. Alimentar o gráfico de barras por quantidade de conclusões por mês no ano escolhido e o gráfico de linha por dia do mês/ano selecionado. Filtros independentes; indicador mensal acompanha o gráfico diário; meses/dias vazios são zero.
-3. Iniciar a demo do zero, sem registros pré-carregados; testar conta, pedidos, agendamento, coleta, entrega, avaliação e cancelamento até gerar dados para ambos os gráficos.
-4. Para testar 20/21+ registros, criar pedidos via ações de teste **na branch simulada**, sem mudar o estado inicial vazio; verificar debounce, busca, X, filtros, Limpar filtros, ordenação, cabeçalho fixo e paginação.
-5. Validar toast de 8 s, realce, skeletons em carregamentos demonstrativos e modais em desktop/mobile. Verificar privacidade do cliente em todos os estados e ausência de promessas de frete real.
-6. Executar build, testes e lint conforme scripts existentes; corrigir erros críticos. Comparar branches para assegurar que a base não recebeu controles/serviços fictícios (`git diff feature/frontend-visual...feature/frontend-simulacoes`).
-7. Registrar instruções para alternar branches, iniciar o site normal e rodar a demo; explicar que a demo reinicia após refresh e não envia e-mails, usa Telegram nem calcula fretes reais. Ensaiar apresentação. Criar commit.
-
-**Aceite:** [ ] Dashboard calculado a partir de pedidos da demonstração; [ ] filtros independentes; [ ] 20+ registros validados; [ ] flows consistentes e responsivos; [ ] branches isoladas; [ ] testes/build.
-
-### Sexta-feira, 11/12 — Entrega 5: duas versões e apresentação final
-
-**Objetivo:** entregar a interface base intacta e uma demonstração funcional separada.
-
-**Roteiro de entrega:**
-
-1. Verificar que a **branch visual** executa/compila, tem as oito telas e **não contém os controles de Modo demonstração**. Registrar o commit da base.
-2. Trocar para a **branch de simulação** com árvore de trabalho limpa, verificar nome ativo e rodar build/testes.
-3. Abrir a demo **vazia**, com Dashboard zerado e tabelas vazias. Cadastrar vendedor fictício, simular confirmação de e-mail e Login.
-4. Criar Pedido `0001` e Pedido `0002`, mostrando validação, numeração, links fictícios, Copiar link e status inicial Aguardando cliente.
-5. No Pedido `0001`, simular nome e horário do cliente, previsão de coleta, coleta, transporte e conclusão. Demonstrar atualização da tabela, realce e toast.
-6. Avaliar o Pedido `0001` uma única vez e mostrar seu efeito na aba Concluídas e nos indicadores/gráficos.
-7. Cancelar o Pedido `0002` antes da coleta com motivo obrigatório e mostrar a aba Canceladas, sem somar como concluída.
-8. Simular frete, alterar parâmetros, recalcular, limpar e confirmar que o contador de encomendas não muda.
-9. Testar pesquisa, filtros, paginação, modal mobile e sidebar. Exibir que endereço do cliente nunca aparece.
-10. Documentar SHA de ambas as branches, scripts, testes, limites e pendências. **Não mesclar a branch de simulação na visual sem decisão explícita.**
-
-**Entregáveis:** (a) frontend visual normal na branch base; (b) frontend de demonstração com simulações na branch separada; (c) roteiro e documentação de execução/comparação.
-
-**Checklist final:**
-
-- [ ] `feature/frontend-visual` compilável e sem lógica operacional simulada.
-- [ ] `feature/frontend-simulacoes` criada a partir da visual e compilável.
-- [ ] Não houve merge automático entre branches.
-- [ ] Cadastro, e-mail e Login funcionam somente em modo demonstrativo, sem autenticação real.
-- [ ] Pedido começa em `0001`, estado inicialmente vazio, link fictício e Telegram ausente.
-- [ ] Agendamento, coleta, conclusão, avaliação e cancelamento só por controles rotulados Modo demonstração.
-- [ ] Frete fictício determinístico, independente da criação de pedidos.
-- [ ] Dashboard, tabelas, busca, filtros, paginação, notificações e mobile demonstrados.
-- [ ] Endereço do destinatário ausente da interface e dos mocks do vendedor.
-- [ ] Commits, build, testes, limites e instruções registrados.
-
----
-
-## 6. Matriz de testes por funcionalidade
-
-**Momento de execução:** testes de estrutura e validação de componentes até 04/12; testes que dependem de pedidos, frete ou transições fictícias **somente de 07 a 11/12, na branch de demonstração**.
-
-| Área | Caso obrigatório | Resultado esperado |
-|---|---|---|
-| Login | Identificador vazio ou senha vazia | Erro abaixo do campo, sem navegar |
-| Login | Mostrar/ocultar senha | Alternância imediata e acessível |
-| Cadastro | Alternar CPF/CNPJ | Campos correspondentes sem vazamento entre tipos |
-| Cadastro | Voltar/Continuar | Dados preservados na sessão de formulário |
-| Cadastro | Atualizar página | Sem recuperação de rascunho |
-| Cadastro | Senha sem símbolo ou maiúscula | Regra inválida indicada |
-| Cadastro | CEP inexistente na simulação | Mensagem clara e edição manual disponível |
-| Perfil | Cancelar alterações | Nada aplicado sem confirmação, se houver mudanças |
-| Nova encomenda | Peso `0,250` kg | Valor decimal aceito |
-| Nova encomenda | Altura zero/negativa | Validação impede criação |
-| Nova encomenda | Primeiro e segundo pedidos | `0001` e `0002` durante a sessão |
-| Nova encomenda | Clicar Copiar link | Clipboard/feedback, sem Telegram real |
-| Agendadas | Pedido recém-criado | Aguardando cliente; cliente e horários sem dados inventados |
-| Agendadas | Simular agendamento | Cliente nomeado ficticiamente, recebimento e coleta previstos |
-| Agendadas | Atualizar status filtrado | Ordenação atual preservada; página atual mantida se possível |
-| Agendadas | Pedido sem previsão | Posicionado depois dos pedidos com previsão na ordenação padrão |
-| Agendadas | Pesquisa por cliente ou número | Mesmo campo encontra ambos |
-| Agendadas | Mais de 20 registros | Paginação correta e cabeçalho fixo |
-| Concluídas | Simular conclusão | Sai de Agendadas e entra em Concluídas |
-| Concluídas | Avaliar 1 vez | Nota/comentário visíveis; segunda avaliação impedida |
-| Concluídas | Período + avaliação | Filtros combinados coerentes |
-| Canceladas | Cancelar antes da coleta | Exige motivo e move ao histórico |
-| Canceladas | Cancelar em transporte | Ação indisponível |
-| Privacidade | Abrir todos os modais/tabelas | Endereço do cliente não aparece |
-| Frete | Simular e alterar peso | Resultado fictício recalculado |
-| Frete | Nova simulação | Limpa formulário e resultado, sem apagar origem do perfil |
-| Frete | Simular | Não cria encomenda |
-| Dashboard | Estado vazio | Indicadores zero; gráficos sem erro |
-| Dashboard | Concluir encomenda | Indicadores e gráficos coerentes com data de conclusão |
-| Dashboard | Cancelar encomenda | Não soma concluídas |
-| Responsividade | Celular | Menu sobreposto; tabelas essenciais; modais utilizáveis |
-| Notificações | Sucesso/erro/atualização | Toast some após 8 s ou ao clicar X |
-
----
-
-## 7. Riscos, dependências e decisões de implementação
-
-| Risco/dependência | Impacto | Mitigação |
-|---|---|---|
-| Estrutura atual do Angular não conhecida | Alterar arquitetura existente desnecessariamente | Inspecionar repositório no dia 13/11 e adaptar plano |
-| A primeira semana tem só um dia útil | Fundação incompleta | Entregar base simples; refinamentos de componentes seguem na Semana 2 |
-| Feriado em 20/11 | Disponibilidade reduzida para entrega | Revisar e apresentar em 19/11 se não houver expediente |
-| Semana final concentra todas as simulações | Risco de atrasar fluxos demonstrativos | Preparar contratos e componentes até 04/12; priorizar fluxo ponta a ponta na branch de demo |
-| Estado em memória reinicia ao atualizar | Demonstração pode perder pedidos | Avisar explicitamente; preparar roteiro de teste que começa vazio |
-| Branch de demo contaminando site visual | Controles fictícios aparecem na base normal | Criar branch separada em 07/12 e não mesclar; comparar commits e diffs antes da entrega |
-| Ausência de Telegram/entregador | Impossível obter agendamento real | Usar ações de simulação claramente rotuladas, sem criar bot real |
-| Simulação de preço/prazo pode parecer real | Expectativas incorretas | Identificar valores como demonstrativos e usar cálculo fictício determinístico |
-| Privacidade do cliente | Exposição indevida do destino | Modelos e componentes do vendedor sem endereço do destinatário |
-| Dados de agenda e datas | Inconsistência em gráficos/filtros | Centralizar datas e formatação; testar fronteiras de mês/ano |
-| Dependências novas incompatíveis | Build quebrado | Inspecionar versões e preferir bibliotecas já adotadas |
-
-### 7.1 Pontos não definidos em detalhe que não devem bloquear o trabalho
-
-As escolhas abaixo podem ser resolvidas como **decisões técnicas locais**, sem ampliar o escopo e mantendo a interface simples:
-
-- Nome exato dos arquivos e componentes, conforme arquitetura Angular encontrada.
-- Biblioteca para gráficos, se alguma já estiver presente; caso contrário, escolher solução adequada à versão existente.
-- Duração visual do destaque temporário de linha (diferente dos **8 s**, já definidos apenas para as notificações).
-- Lista exata de opções alternativas de Ordenar por, preservando obrigatoriamente as ordenações padrão decididas.
-- Colunas secundárias e filtros da aba Canceladas, preservando a consulta de pedido, motivo e data.
-- Formato exato dos prazos fictícios do simulador; não confundi-los com promessas de entrega.
-- Localização dos botões de teste de status/agendamento, que devem ficar claramente identificados como controles de demonstração.
-
-Qualquer mudança de regra de negócio — por exemplo, permitir cancelamento depois da coleta, incluir endereço do cliente para o vendedor ou transformar a simulação de frete em criação de pedido — **não** é ajuste técnico local: exige nova decisão explícita.
-
----
-
-## 8. Checklist de entrega por sexta-feira
-
-### Marco 1 — 13/11
-- [ ] Repositório inspecionado, branch visual verificada/criada com segurança.
-- [ ] Tema e rotas provisórias executáveis.
-- [ ] Sidebar básica e estrutura inicial responsiva.
-
-### Marco 2 — 20/11
-- [ ] Login, Cadastro em três etapas e Meu perfil montados visualmente.
-- [ ] CPF/CNPJ, endereço, senha, validações e modais prontos.
-- [ ] Sem e-mails, login ou CEP fictícios em execução na versão normal.
-- [ ] Feriado de 20/11 considerado na apresentação.
-
-### Marco 3 — 27/11
-- [ ] Nova encomenda e Simular frete com formulários/validações e layout final.
-- [ ] Modais e painel de resultado preparados, sem operações de demonstração.
-- [ ] Estado inicial vazio, sem criação fictícia de pedidos nem preço fictício ativo.
-
-### Marco 4 — 04/12
-- [ ] Tabelas Agendadas, Concluídas e Canceladas com estrutura, estados vazios e controles.
-- [ ] Modais, avaliação, cancelamento e Dashboard preparados visualmente.
-- [ ] Oito telas com navegação, responsividade, build e testes.
-- [ ] **Commit da branch visual registrado e pronto para derivação.**
-
-### Marco 5 — 11/12
-- [ ] **Nova branch `feature/frontend-simulacoes` criada e conferida em 07/12**.
-- [ ] Fluxos de conta/e-mail/CEP fictícios e criação de pedidos implementados **somente na branch simulada**.
-- [ ] Agendamento do cliente, coleta, entrega, avaliação e cancelamento testados por controles de demonstração.
-- [ ] Valor/prazo fictícios e Dashboard integrados com o estado temporário.
-- [ ] Todos os resultados apresentados como demonstrativos, sem endereço do cliente.
-- [ ] Site visual mantido intacto, sem merge automático; SHAs e instruções registrados.
-- [ ] Build, testes, responsividade e apresentação final concluídos.
-
----
-
-## 9. Roteiro mínimo para apresentação final
-
-**Parte A — site visual normal (`feature/frontend-visual`):** mostrar as oito telas, navegação, identidade, formulários, tabelas vazias, filtros, modais e estados visuais. Evidenciar a ausência de controles de cliente/entregador e ausência de pedidos/cotações inventados.
-
-**Parte B — site simulado (`feature/frontend-simulacoes`):** (1) verificar branch ativa; (2) começar vazio; (3) cadastrar vendedor fictício, confirmar e-mail e fazer login demonstrativo; (4) criar pedidos 0001 e 0002; (5) simular agendamento, coleta, conclusão e avaliação do primeiro; (6) cancelar o segundo com motivo; (7) simular frete com cálculo e recálculo determinísticos; (8) mostrar Dashboard atualizado, filtros, paginação e versão celular; (9) explicar reset após refresh, sem integração real e sem endereço de cliente.
-
-**Comparação final:** registrar commits e, se conveniente, mostrar diferenças entre as branches. Nunca apresentar a versão de demonstração como um sistema real em produção.
-
----
-
+**Entrega final:** as oito páginas e seus fluxos demonstrativos, decisões documentadas em `DECISOES_PROJETO.md` e execução consolidada em `PLANO_FRONTEND.md`.
