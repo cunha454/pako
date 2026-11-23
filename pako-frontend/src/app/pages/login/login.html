@@ -1,1 +1,29 @@
-<p>login works!</p>
+<form [formGroup]="login" (ngSubmit)="onSubmit()" class="login-form">
+    <label for="user">Identificador</label>
+    <div class="input-container">
+        <input type="text" id="user" formControlName="identificador">
+    </div>
+    @if (login.controls.identificador.touched){
+        @if (login.controls.identificador.hasError('required')){
+            <p>Informe seu e-mail, CPF ou CNPJ</p>
+        } @else if (login.controls.identificador.hasError('identificadorInvalido')) {
+            <p>Identificador inválido</p>
+        }
+    }
+    <label for="senha">Senha</label>
+    <div class="input-container">
+        <input [type]="senhaVisivel ? 'text' : 'password'" id="senha" formControlName="senha">
+        <button class="btn-senha" (click)="alterarSenha()" type="button">{{senhaVisivel  ? 'Ocultar' : 'Mostrar'}}</button>
+    </div>
+    @if (login.controls.senha.invalid && login.controls.senha.touched){
+        <p>Informe sua senha</p>
+    }
+    <button type="submit" class="btn-primary">Entrar</button>
+    @if (mostrarAviso){
+        <p>O acesso estará disponível após a integração do sistema.</p>
+    }
+</form>
+<div class="links">
+    <a routerLink="/cadastro">Criar conta</a>
+    <a routerLink="/recuperar-senha">Recuperar senha</a> 
+</div>     

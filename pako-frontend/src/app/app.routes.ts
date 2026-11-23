@@ -8,6 +8,8 @@ import { EntregasAgendadas } from './pages/entregas-agendadas/entregas-agendadas
 import { EntregasConcluidas } from './pages/entregas-concluidas/entregas-concluidas';
 import { Login } from './pages/login/login';
 import { Cadastro } from './pages/cadastro/cadastro';
+import { AuthLayout } from './layouts/auth-layout/auth-layout';
+import { RecuperarSenha } from './pages/recuperar-senha/recuperar-senha';
 
 
 export const routes: Routes = [
@@ -47,12 +49,22 @@ export const routes: Routes = [
         ]
     },
     {
-        path: 'login',
-        component: Login
+        path: '',
+        component: AuthLayout,
+        children: [
+            {
+                path: 'login',
+                component: Login
+            }
+        ]
     },
     {
         path: 'cadastro',
         component: Cadastro
+    },
+    {
+        path: 'recuperar-senha',
+        component: RecuperarSenha
     },
     {
         path: '**',

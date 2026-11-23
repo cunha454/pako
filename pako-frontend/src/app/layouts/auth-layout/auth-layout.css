@@ -1,0 +1,52 @@
+
+.auth-layout {
+  display: flex;
+  min-height: 100dvh;
+  background: #f5f7f5;
+  font-family: Inter, Arial, sans-serif;
+}
+
+.auth-brand {
+  width: 45%;
+  background: #174b35;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 48px;
+}
+
+.auth-brand h1 {
+  font-size: 48px;
+  margin: 0 0 12px;
+}
+
+.auth-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .auth-layout {
+    flex-direction: column;
+  }
+
+  .auth-brand {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 28px 24px;
+  }
+
+  .auth-brand h1 {
+    font-size: 30px;
+  }
+
+  .auth-content {
+    align-items: flex-start;
+    padding: 32px 20px;
+  }
+}
