@@ -1,1 +1,56 @@
-<p>cadastro works!</p>
+<form [formGroup]="cadastroForm">
+    @if (etapaAtual === 1){
+        <h2>identificação</h2>
+
+        <div formGroupName="identificacao">
+            <div class="identificação-de-pessoa">
+                <input type="radio" id="pessoa-fisica" value="fisica"  formControlName="tipoPessoa">
+                <label for="pessoa-fisica">Pessoa Física</label>
+
+                <input type="radio" id="pessoa-juridica" value="juridica" formControlName="tipoPessoa">
+                <label for="pessoa-juridica">Pessoa Jurídica</label>
+            </div>
+
+            <div class="informacoes">
+                @if (cadastroForm.get('identificacao.tipoPessoa')?.value === 'fisica'){
+                    <label for="nome-completo">*Nome Completo</label>
+                    <input type="text" id="nome-completo" formControlName="nomeCompleto" placeholder="José Francisco de Assis">
+                        
+                    <label for="cpf">*CPF</label>
+                    <input type="text" id="cpf" formControlName="cpf" placeholder="123.123.123-12">
+
+                    <label for="telefone">*Telefone</label>
+                    <input type="tel" id="telefone" formControlName="telefone" placeholder="47 1212-1212">
+
+                    <label for="nome-comercial">Nome Comercial</label>
+                    <input type="text" id="nome-comercial" formControlName="nomeComercial" placeholder="Padaria do Trigo">
+
+                }
+
+                @if (cadastroForm.get('identificacao.tipoPessoa')?.value === "juridica"){
+                    <label for="nome-fantasia">*Nome fantasia</label>
+                    <input type="text" id="nome-fantasia" formControlName="nomeFantasia" placeholder="Vinhos do Benedito">
+                    
+                    <label for="cnpj">*CNPJ</label>
+                    <input type="text" id="cnpj" formControlName="cnpj" placeholder="123.123.123-12">
+
+                    <label for="telefone">*Telefone</label>
+                    <input type="tel" id="telefone" formControlName="telefone" placeholder="47 1212-1212">
+                }
+            </div>
+        </div>
+    }
+
+    @if (etapaAtual === 2){
+        <h2>endereço de coleta</h2>
+    }
+
+    @if (etapaAtual === 3){
+        <h2>dados de acesso</h2>
+    }
+</form>
+
+<div class="btn-navegacao">
+    <button (click)="voltarEtapa()" [disabled]="etapaAtual === 1">Voltar</button>
+    <button (click)="proximaEtapa()">Avançar</button>
+</div>

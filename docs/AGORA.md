@@ -1,0 +1,6 @@
+1. Criar o fluxo de três etapas com progresso visível, botões Voltar/Continuar e preservação dos valores enquanto o usuário navega; reutilizar componentes de campo do Login.
+2. Implementar na etapa **Identificação** a escolha PF/PJ e exibir os campos específicos: PF (nome completo, CPF, telefone, nome comercial opcional) e PJ (CNPJ, nome fantasia, telefone).
+3. Aplicar máscaras de CPF/CNPJ e telefone, obrigatoriedade e mensagens de formato; impedir avanço com campos inválidos e evitar misturar dados de PF e PJ.
+4. Implementar a etapa **Endereço de coleta**, com CEP, rua, número, bairro, cidade, UF e complemento opcional; restringir o cadastro a um endereço de coleta.
+5. Criar uma pequena fonte local de CEPs ilustrativos para preencher campos quando houver correspondência e permitir edição manual; no CEP desconhecido, deixar o preenchimento manual disponível. Identificar a consulta como **demonstrativa**.
+6. Ajustar grade de campos, avanço/retorno entre etapas e layout em celular; adicionar confirmação de descarte se houver alterações ao sair do formulário.
