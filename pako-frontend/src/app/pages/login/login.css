@@ -19,20 +19,6 @@
     min-width: 0;
 }
 
-.btn-senha{
-    background-color: transparent;
-    color: var(--cor-primaria);
-    border: 0;
-    cursor: pointer;
-    padding: 8px;
-}
-
-.btn-senha:focus-visible {
-    outline: 2px solid var(--cor-primaria);
-    outline-offset: 2px;
-    border-radius: var(--raio-padrao);
-}
-
 .links{
     display: flex;
     flex-direction: column;

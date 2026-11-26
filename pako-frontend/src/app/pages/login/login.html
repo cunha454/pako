@@ -1,21 +1,18 @@
-<form [formGroup]="login" (ngSubmit)="onSubmit()" class="login-form">
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
     <label for="user">Identificador</label>
     <div class="input-container">
         <input type="text" id="user" formControlName="identificador">
     </div>
-    @if (login.controls.identificador.touched){
-        @if (login.controls.identificador.hasError('required')){
+    @if (loginForm.controls.identificador.touched){
+        @if (loginForm.controls.identificador.hasError('required')){
             <p>Informe seu e-mail, CPF ou CNPJ</p>
-        } @else if (login.controls.identificador.hasError('identificadorInvalido')) {
+        } @else if (loginForm.controls.identificador.hasError('identificadorInvalido')) {
             <p>Identificador inválido</p>
         }
     }
     <label for="senha">Senha</label>
-    <div class="input-container">
-        <input [type]="senhaVisivel ? 'text' : 'password'" id="senha" formControlName="senha">
-        <button class="btn-senha" (click)="alterarSenha()" type="button">{{senhaVisivel  ? 'Ocultar' : 'Mostrar'}}</button>
-    </div>
-    @if (login.controls.senha.invalid && login.controls.senha.touched){
+    <app-campo-de-senha [controle]="loginForm.controls.senha"/>
+    @if (loginForm.controls.senha.invalid && loginForm.controls.senha.touched){
         <p>Informe sua senha</p>
     }
     <button type="submit" class="btn-primary">Entrar</button>

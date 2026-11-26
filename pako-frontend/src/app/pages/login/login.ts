@@ -1,33 +1,28 @@
 import { Component } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { CampoDeSenha } from '../../shared/components/campo-de-senha/campo-de-senha';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, CampoDeSenha],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
 export class Login {
-  login = new FormGroup({
+  loginForm = new FormGroup({
     identificador: new FormControl('', [Validators.required, validarIdentificador]),
     senha: new FormControl('', Validators.required)
   });
 
   onSubmit(){
-    if (this.login.valid){
+    if (this.loginForm.valid){
       console.log("Sucesso")
       this.mostrarAviso = true
     } else {
       console.log("Falha, existem campos inválidos")
-      this.login.markAllAsTouched()
+      this.loginForm.markAllAsTouched()
     }
-  }
-
-  senhaVisivel = false
-
-  alterarSenha(){
-    this.senhaVisivel = !this.senhaVisivel
   }
 
   mostrarAviso = false
