@@ -1,23 +1,23 @@
 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
-    <label for="user">Identificador</label>
+    <label for="user">Email</label>
     <div class="input-container">
-        <input type="text" id="user" formControlName="identificador">
+        <input type="email" id="user" formControlName="email">
     </div>
-    @if (loginForm.controls.identificador.touched){
-        @if (loginForm.controls.identificador.hasError('required')){
-            <p>Informe seu e-mail, CPF ou CNPJ</p>
-        } @else if (loginForm.controls.identificador.hasError('identificadorInvalido')) {
-            <p>Identificador inválido</p>
+    @if (loginForm.controls.email.touched){
+        @if (loginForm.controls.email.hasError('required')){
+            <span>Informe seu e-mail</span>
+        } @else if (loginForm.controls.email.hasError('email')) {
+            <span>Email inválido</span>
         }
     }
     <label for="senha">Senha</label>
     <app-campo-de-senha [controle]="loginForm.controls.senha"/>
     @if (loginForm.controls.senha.invalid && loginForm.controls.senha.touched){
-        <p>Informe sua senha</p>
+        <span>Informe sua senha</span>
     }
     <button type="submit" class="btn-primary">Entrar</button>
     @if (mostrarAviso){
-        <p>O acesso estará disponível após a integração do sistema.</p>
+        <span>O acesso estará disponível após a integração do sistema.</span>
     }
 </form>
 <div class="links">
