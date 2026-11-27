@@ -14,9 +14,23 @@ import { cepValidacaoFormato } from '../../shared/validators/cep-formato.validat
   styleUrl: './cadastro.css',
 })
 export class Cadastro {
-  etapaAtual = 1
+  etapaAtual = 1;
 
-  proximaEtapa(){
+  proximaEtapa(){ 
+    const etapas = [
+      this.cadastroForm.controls.identificacao,
+      this.cadastroForm.controls.endereco,
+      this.cadastroForm.controls.acesso
+    ];
+
+    const etapaAtual = etapas[this.etapaAtual-1];
+
+    etapaAtual.markAllAsTouched();
+
+    if (etapaAtual.invalid){
+      return;
+    }
+
     if (this.etapaAtual < 3){
       this.etapaAtual = this.etapaAtual + 1;
     }
