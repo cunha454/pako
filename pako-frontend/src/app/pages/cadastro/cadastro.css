@@ -1,0 +1,62 @@
+.cadastro-form{
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    max-width: 400px;
+    gap: 12px;
+    box-sizing: border-box;
+}
+
+.btn-navegacao{
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    gap: 12px;
+    padding-top: 16px;
+}
+
+.btn-navegacao button{
+    flex: 1;
+    min-width: 0;
+}
+
+.identificação-de-pessoa{
+    display: flex;
+    flex: 1;
+    gap: 12px;
+    padding-bottom: 16px;
+    text-align: center;
+}
+
+.informacoes{
+    display: flex;
+    flex-direction: column;
+}
+
+input{
+    flex: 1;
+}
+
+.progresso {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.etapa {
+  flex: 1;
+  height: 8px;
+  background-color: #e0e0e0;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.etapa.ativa {
+  background-color: #174B35;
+}
+
+span{
+    font-size: 10px;
+    padding-bottom: 5px;
+}

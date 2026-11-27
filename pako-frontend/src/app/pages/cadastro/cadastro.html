@@ -1,56 +1,293 @@
-<form [formGroup]="cadastroForm">
+<div class="progresso">
+  <div
+    class="etapa"
+    [class.ativa]="etapaAtual >= 1">
+  </div>
+
+  <div
+    class="etapa"
+    [class.ativa]="etapaAtual >= 2">
+  </div>
+
+  <div
+    class="etapa"
+    [class.ativa]="etapaAtual >= 3">
+  </div>
+</div>
+
+<form [formGroup]="cadastroForm" class="cadastro-form">
     @if (etapaAtual === 1){
-        <h2>identificação</h2>
+        <h2>Identificação</h2>
 
         <div formGroupName="identificacao">
             <div class="identificação-de-pessoa">
-                <input type="radio" id="pessoa-fisica" value="fisica"  formControlName="tipoPessoa">
+                <input 
+                type="radio" 
+                id="pessoa-fisica" 
+                value="fisica"  
+                formControlName="tipoPessoa">
                 <label for="pessoa-fisica">Pessoa Física</label>
 
-                <input type="radio" id="pessoa-juridica" value="juridica" formControlName="tipoPessoa">
+                <input type="radio" 
+                id="pessoa-juridica" 
+                value="juridica" 
+                formControlName="tipoPessoa">
                 <label for="pessoa-juridica">Pessoa Jurídica</label>
             </div>
 
             <div class="informacoes">
                 @if (cadastroForm.get('identificacao.tipoPessoa')?.value === 'fisica'){
                     <label for="nome-completo">*Nome Completo</label>
-                    <input type="text" id="nome-completo" formControlName="nomeCompleto" placeholder="José Francisco de Assis">
+                    <input 
+                    type="text" 
+                    id="nome-completo" 
+                    formControlName="nomeCompleto" 
+                    placeholder="Ex.: João da Silva">
+
+                    @if (cadastroForm.controls.identificacao.controls.nomeCompleto.hasError('required')
+                    && cadastroForm.controls.identificacao.controls.nomeCompleto.touched){
+                        <span>Nome necessário</span>
+                    }
                         
-                    <label for="cpf">*CPF</label>
-                    <input type="text" id="cpf" formControlName="cpf" placeholder="123.123.123-12">
-
-                    <label for="telefone">*Telefone</label>
-                    <input type="tel" id="telefone" formControlName="telefone" placeholder="47 1212-1212">
-
                     <label for="nome-comercial">Nome Comercial</label>
-                    <input type="text" id="nome-comercial" formControlName="nomeComercial" placeholder="Padaria do Trigo">
+                    <input 
+                    type="text" 
+                    id="nome-comercial" 
+                    formControlName="nomeComercial" 
+                    placeholder="Ex.: Padaria na Pão Chapa">
 
+                    <label for="cpf">*CPF</label>
+                    <input 
+                    type="text" 
+                    id="cpf" 
+                    formControlName="cpf" 
+                    placeholder="Ex.: 000.000.000-00">
+                
+
+                    @if (cadastroForm.controls.identificacao.controls.cpf.hasError('cpfInvalido') 
+                    && cadastroForm.controls.identificacao.controls.cpf.touched){
+                        <span>CPF inválido</span>
+                    }
+                    
+                    @if (cadastroForm.controls.identificacao.controls.cpf.hasError('required')
+                    && cadastroForm.controls.identificacao.controls.cpf.touched){
+                        <span>CPF necessário</span>
+                    }
                 }
 
                 @if (cadastroForm.get('identificacao.tipoPessoa')?.value === "juridica"){
                     <label for="nome-fantasia">*Nome fantasia</label>
-                    <input type="text" id="nome-fantasia" formControlName="nomeFantasia" placeholder="Vinhos do Benedito">
+                    <input 
+                    type="text" 
+                    id="nome-fantasia" 
+                    formControlName="nomeFantasia" 
+                    placeholder="Ex.: Mercado Bom Preço">
+
+                    @if (cadastroForm.controls.identificacao.controls.nomeFantasia.hasError('required')
+                    && cadastroForm.controls.identificacao.controls.nomeFantasia.touched){
+                        <span>Nome fantasia necessário</span>
+                    }
                     
                     <label for="cnpj">*CNPJ</label>
-                    <input type="text" id="cnpj" formControlName="cnpj" placeholder="123.123.123-12">
-
-                    <label for="telefone">*Telefone</label>
-                    <input type="tel" id="telefone" formControlName="telefone" placeholder="47 1212-1212">
+                    <input 
+                    type="text" 
+                    id="cnpj" 
+                    formControlName="cnpj" 
+                    placeholder="Ex.: XX.XXX.XXX/XXXX-XX">
+                
+                    @if (cadastroForm.controls.identificacao.controls.cnpj.hasError('cnpjInvalido') 
+                    && cadastroForm.controls.identificacao.controls.cnpj.touched){
+                        <span>CNPJ inválido</span>
+                    }
+                    
+                    @if (cadastroForm.controls.identificacao.controls.cnpj.hasError('required')
+                    && cadastroForm.controls.identificacao.controls.cnpj.touched){
+                        <span>CNPJ necessário</span>
+                    }
                 }
+
+                @if (cadastroForm.get('identificacao.tipoPessoa')?.value !== ""){
+
+                     <label for="telefone">*Telefone Celular</label>
+                    <input 
+                    type="tel" 
+                    id="telefone" 
+                    formControlName="telefone" 
+                    placeholder="Ex.: (00) 00000-0000">
+
+                    @if (cadastroForm.controls.identificacao.controls.telefone.hasError('numeroInvalido') 
+                    && cadastroForm.controls.identificacao.controls.telefone.touched){
+                        <span>Telefone inválido</span>
+                    }
+
+                    @if (cadastroForm.controls.identificacao.controls.telefone.hasError('required')
+                    && cadastroForm.controls.identificacao.controls.telefone.touched){
+                        <span>Telefone necessário</span>
+                    }
+                }
+
+
             </div>
         </div>
     }
 
     @if (etapaAtual === 2){
-        <h2>endereço de coleta</h2>
+        <h2>Endereço de Coleta</h2>
+        <div formGroupName="endereco" class="informacoes">
+            <label for="cep">*CEP</label>
+            <input 
+            type="text" 
+            id="cep" 
+            formControlName="cep" 
+            placeholder="Ex.: 89080-000" 
+            maxlength="9">
+
+            @if (cadastroForm.controls.endereco.controls.cep.touched){
+                @if (cadastroForm.controls.endereco.controls.cep.hasError('required')){
+                    <span>CEP necessário</span>
+            }
+            
+                @if (cadastroForm.controls.endereco.controls.cep.hasError('cepInvalido')){
+                    <span>CEP inválido</span>
+                }            
+            }
+
+            <label for="rua">*Rua</label>
+            <input 
+            type="text" 
+            id="rua" 
+            formControlName="rua"
+            placeholder="Ex.: Rua das Flores">
+
+            @if (cadastroForm.controls.endereco.controls.rua.hasError('required')
+            && cadastroForm.controls.endereco.controls.rua.touched){
+                <span>Rua necessária</span>
+            }
+
+            <label for="numero">*Número</label>
+            <input 
+            type="text" 
+            id="numero" 
+            formControlName="numero"
+            placeholder="Ex.: 125">
+
+            @if (cadastroForm.controls.endereco.controls.numero.hasError('required')
+            && cadastroForm.controls.endereco.controls.numero.touched){
+                <span>Número necessário</span>
+            }
+
+            <label for="bairro">*Bairro</label>
+            <input 
+            type="text" 
+            id="bairro" 
+            formControlName="bairro"
+            placeholder="Ex.: Centro">
+
+            @if (cadastroForm.controls.endereco.controls.bairro.hasError('required')
+            && cadastroForm.controls.endereco.controls.bairro.touched){
+                <span>Bairro necessário</span>
+            }
+
+            <label for="cidade">*Cidade</label>
+            <input 
+            type="text" 
+            id="cidade" 
+            formControlName="cidade"
+            placeholder="Ex.: Indaial">
+
+            @if (cadastroForm.controls.endereco.controls.cidade.hasError('required')
+            && cadastroForm.controls.endereco.controls.cidade.touched){
+                <span>Cidade necessária</span>
+            }
+
+            <label for="uf">*Estado</label>
+            <input 
+            type="text" 
+            id="uf" 
+            formControlName="uf"
+            placeholder="Ex.: SC"
+            maxlength="2">
+
+            @if (cadastroForm.controls.endereco.controls.uf.hasError('required')
+            && cadastroForm.controls.endereco.controls.uf.touched){
+                <span>Estado necessário</span>
+            }
+
+            <label for="complemento">Complemento</label>
+            <input 
+            type="text" 
+            id="complemento" 
+            formControlName="complemento"
+            placeholder="Ex.: Sala 02, bloco B">
+        </div>
     }
 
     @if (etapaAtual === 3){
-        <h2>dados de acesso</h2>
-    }
-</form>
+        <h2>Dados de Acesso</h2>
+        <div formGroupName="acesso" class="informacoes">
+            <label for="email">Email</label>
+            <input 
+            type="email"
+            id="email"
+            formControlName="email">
 
-<div class="btn-navegacao">
-    <button (click)="voltarEtapa()" [disabled]="etapaAtual === 1">Voltar</button>
-    <button (click)="proximaEtapa()">Avançar</button>
-</div>
+            @if (cadastroForm.controls.acesso.controls.email.hasError('email')
+            && cadastroForm.controls.acesso.controls.email.touched){
+                <span>Email inválido</span>
+            }
+
+            @if (cadastroForm.controls.acesso.controls.email.hasError('required')
+            && cadastroForm.controls.acesso.controls.email.touched){
+                <span>Email necessário</span>
+            }
+
+            <label for="senha">Senha</label>
+            <app-campo-de-senha [controle]="cadastroForm.controls.acesso.controls.senha" />
+
+            @if (cadastroForm.controls.acesso.controls.senha.dirty){
+                @if (cadastroForm.controls.acesso.controls.senha.hasError('minimoCaracteres')){
+                    <span>A senha deve conter pelo menos 8 caracteres</span>
+                }
+                @if (cadastroForm.controls.acesso.controls.senha.hasError('letraMaiuscula')){
+                    <span>A senha dever conter no mínimo 1 letra maiúsculo</span>
+                }
+                @if (cadastroForm.controls.acesso.controls.senha.hasError('letraMinuscula')){
+                    <span>A senha deve conter pelo menos 1 letra minúsculo</span>
+                }
+                @if (cadastroForm.controls.acesso.controls.senha.hasError('numero')){
+                    <span>A senha deve conter pelo menos 1 número</span>
+                }
+                @if (cadastroForm.controls.acesso.controls.senha.hasError('simbolos')){
+                    <span>A senha deve conter pelo menos 1 caracter especial</span>
+                }
+            }
+
+            @if (cadastroForm.controls.acesso.controls.senha.hasError('required')
+            && cadastroForm.controls.acesso.controls.senha.touched){
+                <span>Senha necessária</span>
+            }
+
+            <label for="confirmar-senha">Confirmar Senha</label>
+            <input 
+            type="password"
+            id="confirmar-senha"
+            formControlName="confirmarSenha">
+
+            @if (cadastroForm.controls.acesso.hasError('senhaNaoCompativel')
+            && (cadastroForm.controls.acesso.controls.confirmarSenha.dirty)){
+                <span>As senhas digitadas não são idênticas</span>
+            }
+
+            @if (cadastroForm.controls.acesso.controls.confirmarSenha.hasError('required')
+            && cadastroForm.controls.acesso.controls.confirmarSenha.touched){
+                <span>Confirmação de senha necessária</span>
+            }
+
+        </div>
+    }
+    
+    <div class="btn-navegacao">
+        <button type="button" (click)="voltarEtapa()" [disabled]="etapaAtual === 1">Voltar</button>
+        <button type="submit" (click)="proximaEtapa()">Avançar</button>
+    </div>
+</form>
