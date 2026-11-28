@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { CampoDeSenha } from '../../shared/components/campo-de-senha/campo-de-senha';
 import { senhaValidacao } from '../../shared/validators/senha.validator';
@@ -6,6 +6,8 @@ import { telefoneValidacao } from '../../shared/validators/telefone.validator';
 import { cnpjFormatoValidacao } from '../../shared/validators/cnpj/cnpj-formato.validator';
 import { cpfFormatoValidacao } from '../../shared/validators/cpf/cpf-formato.validator';
 import { cepValidacaoFormato } from '../../shared/validators/cep-formato.validator';
+import { CepService, Endereco } from '../../core/services/cep.service';
+import { startWith } from 'rxjs';
 
 @Component({
   selector: 'app-cadastro',
@@ -25,11 +27,11 @@ export class Cadastro {
 
     const etapaAtual = etapas[this.etapaAtual-1];
 
-    etapaAtual.markAllAsTouched();
+    /*etapaAtual.markAllAsTouched();
 
     if (etapaAtual.invalid){
       return;
-    }
+    }*/ 
 
     if (this.etapaAtual < 3){
       this.etapaAtual = this.etapaAtual + 1;
@@ -44,7 +46,7 @@ export class Cadastro {
 
   cadastroForm = new FormGroup({
     identificacao: new FormGroup({
-      tipoPessoa: new FormControl(''),
+      tipoPessoa: new FormControl('fisica'),
 
       nomeCompleto: new FormControl(''),
       cpf: new FormControl(''),
@@ -78,44 +80,72 @@ export class Cadastro {
   
   ngOnInit(){
     const identificacao = this.cadastroForm.controls.identificacao;
+    const tipoPessoa = identificacao.controls.tipoPessoa;
 
-    identificacao.controls.tipoPessoa.valueChanges.subscribe(
-      tipo => {
-        const nomeCompleto = identificacao.controls.nomeCompleto;
-        const nomeComercial = identificacao.controls.nomeComercial;
-        const cpf = identificacao.controls.cpf;
-
-        const nomeFantasia = identificacao.controls.nomeFantasia;
-        const cnpj = identificacao.controls.cnpj;
-
-        const telefone = identificacao.controls.telefone;
-
-        if (tipo === "fisica"){
-          cpf.setValidators([Validators.required, cpfFormatoValidacao])
-          nomeCompleto.setValidators(Validators.required)
-
-          cnpj.clearValidators();
-          nomeFantasia.clearValidators();
-
-          cnpj.reset('');
-          nomeFantasia.reset('');
-          telefone.reset('');
-        }
-
-        if (tipo === "juridica"){
-          cnpj.setValidators([Validators.required, cnpjFormatoValidacao]);
-          nomeFantasia.setValidators(Validators.required);
-          
-          cpf.clearValidators();
-          nomeCompleto.clearValidators();
-
-          cpf.reset('');
-          nomeCompleto.reset('');
-          nomeComercial.reset('');
-          telefone.reset('');
-        }
+    tipoPessoa.valueChanges.pipe(
+      startWith(tipoPessoa.value)
+    ).subscribe(tipo => {
+      
+      const nomeCompleto = identificacao.controls.nomeCompleto;
+      const nomeComercial = identificacao.controls.nomeComercial;
+      const cpf = identificacao.controls.cpf;
+      const nomeFantasia = identificacao.controls.nomeFantasia;
+      const cnpj = identificacao.controls.cnpj;
+      const telefone = identificacao.controls.telefone;
+      if (tipo === "fisica"){
+        cpf.setValidators([Validators.required, cpfFormatoValidacao])
+        nomeCompleto.setValidators(Validators.required)
+        cnpj.clearValidators();
+        nomeFantasia.clearValidators();
+        cnpj.reset('');
+        nomeFantasia.reset('');
+        telefone.reset('');
       }
-    );
+      if (tipo === "juridica"){
+        cnpj.setValidators([Validators.required, cnpjFormatoValidacao]);
+        nomeFantasia.setValidators(Validators.required);
+        
+        cpf.clearValidators();
+        nomeCompleto.clearValidators();
+        cpf.reset('');
+        nomeCompleto.reset('');
+        nomeComercial.reset('');
+        telefone.reset('');
+      }
+    });
+  }
+
+  cep = this.cadastroForm.controls.endereco.controls.cep
+  private cepService = inject(CepService);
+  endereco: Endereco | null = null;
+
+  obterDadosCEP(){
+    let cepValor = this.cadastroForm.controls.endereco.controls.cep.value ?? '';
+    let numeros = cepValor.replace(/\D/g, "");
+    const formEndereco = this.cadastroForm.controls.endereco;
+
+    this.cepService.buscarEndereco(numeros).subscribe({
+      next: (dados) => {
+        if (dados.erro) {
+          this.endereco = null;
+          console.log("CEP não encontrado");
+          return;
+        }
+
+        formEndereco.patchValue({
+          rua: dados.logradouro,
+          bairro: dados.bairro,
+          cidade: dados.localidade,
+          uf: dados.uf
+        });
+
+      },
+
+      error: (erro) => {
+        this.endereco = null;
+        console.log("Erro ao buscar CEP", erro)
+      }
+    })
   }
 }
 

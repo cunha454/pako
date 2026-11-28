@@ -140,16 +140,17 @@
             id="cep" 
             formControlName="cep" 
             placeholder="Ex.: 89080-000" 
-            maxlength="9">
+            maxlength="9"
+            (change)="obterDadosCEP()">
 
             @if (cadastroForm.controls.endereco.controls.cep.touched){
                 @if (cadastroForm.controls.endereco.controls.cep.hasError('required')){
                     <span>CEP necessário</span>
-            }
+                }
             
                 @if (cadastroForm.controls.endereco.controls.cep.hasError('cepInvalido')){
                     <span>CEP inválido</span>
-                }            
+                }
             }
 
             <label for="rua">*Rua</label>
@@ -290,4 +291,4 @@
         <button type="button" (click)="voltarEtapa()" [disabled]="etapaAtual === 1">Voltar</button>
         <button type="submit" (click)="proximaEtapa()">Avançar</button>
     </div>
-</form>
+</form> 
